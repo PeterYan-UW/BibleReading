@@ -31,7 +31,7 @@
             android:text="选择您的阅读周期"
             android:textSize="40dp" />
 		<TextView
-            android:id="@+id/StartDate"
+            android:id="@+id/StartDateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             
@@ -43,7 +43,7 @@
         <DatePicker
             android:scaleY="0.7" 
 			android:scaleX="0.7"
-        	android:id="@+id/datePicker1"
+        	android:id="@+id/StartDateValue"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	
@@ -51,7 +51,7 @@
         	android:layout_marginLeft="90dp" />
         
         <TextView
-            android:id="@+id/EndDate"
+            android:id="@+id/EndDateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             
@@ -63,7 +63,7 @@
         <DatePicker
             android:scaleY="0.7" 
 			android:scaleX="0.7"
-        	android:id="@+id/datePicker2"
+        	android:id="@+id/EndDateValue"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	
