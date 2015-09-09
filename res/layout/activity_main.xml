@@ -8,8 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.biblereading.MainActivity" >
 
-    
-
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
@@ -33,7 +31,7 @@
             android:text="选择您的阅读周期"
             android:textSize="40dp" />
 		<TextView
-            android:id="@+id/StartDate"
+            android:id="@+id/StartDateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             
@@ -45,7 +43,7 @@
         <DatePicker
             android:scaleY="0.7" 
 			android:scaleX="0.7"
-        	android:id="@+id/datePicker1"
+        	android:id="@+id/StartDateValue"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	
@@ -53,7 +51,7 @@
         	android:layout_marginLeft="90dp" />
         
         <TextView
-            android:id="@+id/EndDate"
+            android:id="@+id/EndDateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             
@@ -65,13 +63,20 @@
         <DatePicker
             android:scaleY="0.7" 
 			android:scaleX="0.7"
-        	android:id="@+id/datePicker2"
+        	android:id="@+id/EndDateValue"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	
         	android:layout_marginTop="300dp"
         	android:layout_marginLeft="90dp" />
-
-        
+        <Button
+	        android:id="@+id/start"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_centerHorizontal="true"
+	        android:layout_marginBottom="50dp"
+	        android:text="Start"
+	        android:onClick="startReading" />
 
 </RelativeLayout>
