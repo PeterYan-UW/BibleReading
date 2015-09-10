@@ -3,12 +3,6 @@ package com.example.biblereading;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
-
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;

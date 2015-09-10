@@ -121,7 +121,7 @@ public class LocalDataManage extends SQLiteOpenHelper{
 	
 	public void DeletePlan(LocalDataManage ldm){
 		SQLiteDatabase SQ = ldm.getWritableDatabase();
-		SQ.delete(DAILY_TASK_TABLE, "*", null);
-		SQ.delete(PLAN_TABLE, "*", null);
+		SQ.delete(DAILY_TASK_TABLE, null, null);
+		SQ.delete(PLAN_TABLE, null, null);
 	}
 }

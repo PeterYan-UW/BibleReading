@@ -1,8 +1,10 @@
 package com.example.biblereading;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
@@ -132,21 +134,7 @@ public class CalenderActivity extends FragmentActivity {
 		caldroidFragment.setCaldroidListener(listener);
 
 		final TextView textView = (TextView) findViewById(R.id.textview);
-		
-		
-		
-		
 		createScheduledNotification();
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}
 
 	/**
@@ -172,6 +160,8 @@ public class CalenderActivity extends FragmentActivity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("Set?", "No");
         editor.commit();
+        LocalDataManage DOP = new LocalDataManage(this);
+		DOP.DeletePlan(DOP);
     	startActivity(intent);
     	
     }
@@ -186,8 +176,6 @@ public class CalenderActivity extends FragmentActivity {
 		// Add defined amount of days to the date
 	
 		calendar.add(Calendar.SECOND, 10);
-	
-	 
 		
 		// Retrieve alarm manager from the system
 	
@@ -197,20 +185,14 @@ public class CalenderActivity extends FragmentActivity {
 	
 		int id = (int) System.currentTimeMillis();
 	
-	 
-	
 	 	// Prepare the intent which should be launched at the date
 	
-	 	Intent intent = new Intent(this, TimeAlarm.class);
-	
-	 
+	 	Intent intent = new Intent(this, TimeAlarm.class);	 
 	
 	 // Prepare the pending intent
 	
 	 	PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-	
-	 
-	
+		
 	 	// Register the alert in the system. You have the option to define if the device has to wake up on the alert or not
 	 	Log.v("first","notify");
 		//alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60, pendingIntent);
