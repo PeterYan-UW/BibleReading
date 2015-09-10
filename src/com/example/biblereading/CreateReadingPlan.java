@@ -49,16 +49,18 @@ public class CreateReadingPlan {
         int EndChapter = 1;
         
         for(int CurrentDay = 1; CurrentDay <= totalReadingDays; CurrentDay++) {
-        	dailyChapters = backUpdailyChapters;
+        	
+        	if (CurrentDay <= remainderChapters) {
+        		dailyChapters = backUpdailyChapters;
+        	}
+        	else {
+        		dailyChapters = backUpdailyChapters - 1; 
+        	}
     		for (int CurrentBook=StartBook; CurrentBook < TOTAL_BOOKS; CurrentBook++) {
     			int CurrentBookChaptersNum = Bibleindex.BibleChapterNum[StartBook];
     			if (CurrentBookChaptersNum-StartChapter >= dailyChapters) {
     				EndBook = StartBook;
 	        		EndChapter = StartChapter+dailyChapters;
-    	        	if (CurrentDay > remainderChapters) {
-    	        		EndChapter = EndChapter - 1;
-    	        	}
-    	        		
     				DOP.AddTask(DOP, planId, CurrentDay, CurrentBook, StartChapter, EndChapter);
     				StartChapter = EndChapter+1;
     				break; 

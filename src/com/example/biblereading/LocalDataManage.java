@@ -78,7 +78,7 @@ public class LocalDataManage extends SQLiteOpenHelper{
 	public ArrayList<HashMap<String, Object>> getTaskInfo(LocalDataManage ldm){
 		ArrayList<HashMap<String, Object>> planList; 
 		planList = new ArrayList<HashMap<String, Object>>(); 
-		String selectQuery = "SELECT rowid, * FROM "+DAILY_TASK_TABLE; 
+		String selectQuery = "SELECT rowid, day, plan_id, book, start_chapter, end_chapter FROM "+DAILY_TASK_TABLE; 
 		SQLiteDatabase SQ = ldm.getReadableDatabase();
 		Cursor cursor = SQ.rawQuery(selectQuery, null); 
 		if (cursor.moveToFirst()) { 
@@ -88,8 +88,8 @@ public class LocalDataManage extends SQLiteOpenHelper{
 				map.put("day", cursor.getString(1));
 				map.put("plan_id", cursor.getString(2));  
 				map.put("book", cursor.getString(3));  
-				map.put("start_chapter", cursor.getString(3));  
-				map.put("end_chapter", cursor.getString(3));  
+				map.put("start_chapter", cursor.getString(4));  
+				map.put("end_chapter", cursor.getString(5));  
 				planList.add(map); 
 			} while (cursor.moveToNext()); 
 		} // return contact list return wordList;
