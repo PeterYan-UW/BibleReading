@@ -8,9 +8,14 @@ import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -127,6 +132,21 @@ public class CalenderActivity extends FragmentActivity {
 		caldroidFragment.setCaldroidListener(listener);
 
 		final TextView textView = (TextView) findViewById(R.id.textview);
+		
+		
+		
+		
+		createScheduledNotification();
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 
 	/**
@@ -145,6 +165,55 @@ public class CalenderActivity extends FragmentActivity {
 			dialogCaldroidFragment.saveStatesToKey(outState,
 					"DIALOG_CALDROID_SAVED_STATE");
 		}
+	}
+	public void ResetDays(View view){
+    	Intent intent = new Intent(this, MainActivity.class);
+    	SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("Set?", "No");
+        editor.commit();
+    	startActivity(intent);
+    	
+    }
+	private void createScheduledNotification() {
+	
+		// Get new calendar object and set the date to now
+	
+		Calendar calendar = Calendar.getInstance();
+	
+		calendar.setTimeInMillis(System.currentTimeMillis());
+	
+		// Add defined amount of days to the date
+	
+		calendar.add(Calendar.SECOND, 10);
+	
+	 
+		
+		// Retrieve alarm manager from the system
+	
+		AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(getBaseContext().ALARM_SERVICE);
+	
+	 	// Every scheduled intent needs a different ID, else it is just executed once
+	
+		int id = (int) System.currentTimeMillis();
+	
+	 
+	
+	 	// Prepare the intent which should be launched at the date
+	
+	 	Intent intent = new Intent(this, TimeAlarm.class);
+	
+	 
+	
+	 // Prepare the pending intent
+	
+	 	PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+	
+	 
+	
+	 	// Register the alert in the system. You have the option to define if the device has to wake up on the alert or not
+	 	Log.v("first","notify");
+		//alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60, pendingIntent);
 	}
 
 }

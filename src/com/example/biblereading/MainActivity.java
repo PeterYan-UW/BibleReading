@@ -44,7 +44,9 @@ public class MainActivity extends Activity {
         Log.v("here i am".split("\\s+")[1],"split");
         Log.v("here i am".split("\\s+")[2],"split");
         if (value.equals("Yes")) {
-        	setContentView(R.layout.activity_calender);
+        	Intent intent = new Intent(this, CalenderActivity.class);
+        	
+        	startActivity(intent);
         }
         else {
         	setContentView(R.layout.activity_main);
@@ -101,8 +103,8 @@ public class MainActivity extends Activity {
         
         Map<Integer, Vector<String>> Days_StartToEnd = new HashMap<Integer, Vector<String>>();
         
-        int PagesDaily = 1189/TotalReadingDays;
-        int BackUp_PagesDaily = PagesDaily;
+        int ChaptersDaily = 1189/TotalReadingDays;
+        int BackUp_ChaptersDaily = ChaptersDaily;
         int RemainderPages = 1189%TotalReadingDays;
         int StartBook = 0;
         int StartChapter = 1;
@@ -111,13 +113,13 @@ public class MainActivity extends Activity {
         BibleIndex Bibleindex = new BibleIndex();
         for(int CurrentDay=1; CurrentDay<=TotalReadingDays; CurrentDay++) {
         	Vector<String> Book_Chapter = new Vector<String>();
-        	PagesDaily = BackUp_PagesDaily;
+        	ChaptersDaily = BackUp_ChaptersDaily;
         	if (CurrentDay<=RemainderPages) {
         		for (int CurrentBook=StartBook; CurrentBook<66; CurrentBook++) {
         			int CurrentBookChaptersNum = Bibleindex.BibleChapterNum[StartBook];
-        			if (CurrentBookChaptersNum-StartChapter>=PagesDaily) {
+        			if (CurrentBookChaptersNum-StartChapter>=ChaptersDaily) {
         				EndBook = StartBook;
-        				EndChapter = StartChapter+PagesDaily;
+        				EndChapter = StartChapter+ChaptersDaily;
         				Book_Chapter.addElement(Bibleindex.BibleBookName[CurrentBook]+" 第"+Integer.toString(StartChapter)+"章-第"+Integer.toString(EndChapter)+"章");
         				StartChapter = EndChapter+1;
         				break; 
@@ -130,7 +132,7 @@ public class MainActivity extends Activity {
         				EndBook = StartBook;
         				EndChapter = Bibleindex.BibleChapterNum[CurrentBook];
         				Book_Chapter.addElement(Bibleindex.BibleBookName[CurrentBook]+" 第"+Integer.toString(StartChapter)+"章-第"+Integer.toString(EndChapter)+"章");
-        				PagesDaily = PagesDaily - (EndChapter-StartChapter) - 1;
+        				ChaptersDaily = ChaptersDaily - (EndChapter-StartChapter) - 1;
         				StartBook++;
         				StartChapter = 1;
         				
@@ -141,9 +143,9 @@ public class MainActivity extends Activity {
         	else {
         		for (int CurrentBook=StartBook; CurrentBook<66; CurrentBook++) {
         			int CurrentBookChaptersNum = Bibleindex.BibleChapterNum[StartBook];
-        			if (CurrentBookChaptersNum-StartChapter>=PagesDaily-1) {
+        			if (CurrentBookChaptersNum-StartChapter>=ChaptersDaily-1) {
         				EndBook = StartBook;
-        				EndChapter = StartChapter+PagesDaily-1;
+        				EndChapter = StartChapter+ChaptersDaily-1;
         				Book_Chapter.addElement(Bibleindex.BibleBookName[CurrentBook]+" 第"+Integer.toString(StartChapter)+"章-第"+Integer.toString(EndChapter)+"章");
         				StartChapter = EndChapter+1;
         				break; 
@@ -156,7 +158,7 @@ public class MainActivity extends Activity {
         				EndBook = StartBook;
         				EndChapter = Bibleindex.BibleChapterNum[CurrentBook];
         				Book_Chapter.addElement(Bibleindex.BibleBookName[CurrentBook]+" 第"+Integer.toString(StartChapter)+"章-第"+Integer.toString(EndChapter)+"章");
-        				PagesDaily = PagesDaily - (EndChapter-StartChapter) - 1;
+        				ChaptersDaily = ChaptersDaily - (EndChapter-StartChapter) - 1;
         				StartBook++;
         				StartChapter = 1;
         			}
@@ -182,4 +184,5 @@ public class MainActivity extends Activity {
         
     	startActivity(intent);
     }
+    
 }

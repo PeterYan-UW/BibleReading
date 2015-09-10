@@ -26,7 +26,9 @@
             android:name=".CalenderActivity"
             android:label="@string/title_activity_calender" >
         </activity>
-    </application>
+        <receiver android:name="com.example.biblereading.TimeAlarm" />
     
+    </application>
+	
 
 </manifest>
