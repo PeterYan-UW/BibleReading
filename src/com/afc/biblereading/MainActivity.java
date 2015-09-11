@@ -1,8 +1,11 @@
-package com.example.biblereading;
+package com.afc.biblereading;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
+import com.example.biblereading.R;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;

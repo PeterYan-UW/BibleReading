@@ -1,4 +1,4 @@
-package com.example.biblereading;
+package com.afc.biblereading;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.example.biblereading.R;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -61,11 +62,6 @@ public class CalenderActivity extends FragmentActivity {
 		// **** If you want normal CaldroidFragment, use below line ****
 		caldroidFragment = new CaldroidFragment();
 
-		// //////////////////////////////////////////////////////////////////////
-		// **** This is to show customized fragment. If you want customized
-		// version, uncomment below line ****
-//		 caldroidFragment = new CaldroidSampleCustomFragment();
-
 		// Setup arguments
 
 		// If Activity is created after rotation
@@ -95,6 +91,10 @@ public class CalenderActivity extends FragmentActivity {
 		t.replace(R.id.calendar, caldroidFragment);
 		t.commit();
 
+		// Set text in textview
+		TextView todayTaskView = (TextView)findViewById(R.id.todayTask);
+		todayTaskView.setText("Today's reading:");
+		
 		// Setup listener
 		final CaldroidListener listener = new CaldroidListener() {
 
@@ -133,7 +133,6 @@ public class CalenderActivity extends FragmentActivity {
 		// Setup Caldroid
 		caldroidFragment.setCaldroidListener(listener);
 
-		final TextView textView = (TextView) findViewById(R.id.textview);
 		createScheduledNotification();
 	}
 
@@ -154,6 +153,7 @@ public class CalenderActivity extends FragmentActivity {
 					"DIALOG_CALDROID_SAVED_STATE");
 		}
 	}
+	
 	public void ResetDays(View view){
     	Intent intent = new Intent(this, MainActivity.class);
     	SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
@@ -165,6 +165,7 @@ public class CalenderActivity extends FragmentActivity {
     	startActivity(intent);
     	
     }
+	
 	private void createScheduledNotification() {
 	
 		// Get new calendar object and set the date to now

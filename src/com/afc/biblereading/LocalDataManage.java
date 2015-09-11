@@ -1,4 +1,4 @@
-package com.example.biblereading;
+package com.afc.biblereading;
 
 import java.util.ArrayList;
 import java.util.Date;

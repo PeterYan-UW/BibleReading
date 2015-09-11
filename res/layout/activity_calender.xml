@@ -5,9 +5,11 @@
     android:orientation="vertical" >    
     
     <TextView
-        android:id="@+id/textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:id="@+id/todayTask"
+        android:textSize="32sp"
+        android:layout_width="10dp"
+        android:layout_height="wrap_content"
+        android:layout_weight=".33" />
 
     <LinearLayout
         android:id="@+id/calendar"

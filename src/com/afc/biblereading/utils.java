@@ -1,4 +1,4 @@
-package com.example.biblereading;
+package com.afc.biblereading;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
