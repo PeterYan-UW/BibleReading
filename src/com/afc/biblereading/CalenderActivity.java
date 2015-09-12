@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-import com.example.biblereading.R;
+import com.afc.biblereading.R;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -94,6 +94,18 @@ public class CalenderActivity extends FragmentActivity {
 		// Set text in textview
 		TextView todayTaskView = (TextView)findViewById(R.id.todayTask);
 		todayTaskView.setText("Today's reading:");
+		
+		int plan_id = -1;
+		Date startDay = null;
+		LocalDataManage DOP = new LocalDataManage(this);
+		ArrayList<HashMap<String, Object>> plans = DOP.getPlanInfo(DOP);
+		if (plans.size()==1){
+			plan_id = Integer.parseInt((String) plans.get(0).get("plan_id"));
+			startDay = utils.formatDateTime(this, (String) plans.get(0).get("start_day"));
+			ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
+//			Log.d("database task return", String.valueOf(taskResult.size()));
+			Log.d("today task return", todayTask.toString());
+		}
 		
 		// Setup listener
 		final CaldroidListener listener = new CaldroidListener() {
