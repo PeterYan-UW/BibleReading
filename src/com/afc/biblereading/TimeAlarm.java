@@ -1,8 +1,10 @@
-package com.example.biblereading;
+package com.afc.biblereading;
 
 
 
  
+
+import com.afc.biblereading.R;
 
 import android.app.Notification;
 import android.app.NotificationManager;

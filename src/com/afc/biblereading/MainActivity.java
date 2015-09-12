@@ -1,8 +1,13 @@
-package com.example.biblereading;
+package com.afc.biblereading;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
+import org.joda.time.DateTime;
+
+import com.afc.biblereading.R;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -81,8 +86,8 @@ public class MainActivity extends Activity {
     	DatePicker StartDateValue = (DatePicker) findViewById(R.id.StartDateValue);
         DatePicker EndDateValue = (DatePicker) findViewById(R.id.EndDateValue);        
 
-        Date startDate = new Date(StartDateValue.getYear(), StartDateValue.getMonth()+1, StartDateValue.getDayOfMonth());
-        Date endDate = new Date(EndDateValue.getYear(), EndDateValue.getMonth()+1, EndDateValue.getDayOfMonth());
+        DateTime startDate = new DateTime(StartDateValue.getYear(), StartDateValue.getMonth()+1, StartDateValue.getDayOfMonth(),0,0,0,0);
+        DateTime endDate = new DateTime(EndDateValue.getYear(), EndDateValue.getMonth()+1, EndDateValue.getDayOfMonth(),0,0,0,0);
         
         CreateReadingPlan.CreatePlan(planName, startDate, endDate, this);
         

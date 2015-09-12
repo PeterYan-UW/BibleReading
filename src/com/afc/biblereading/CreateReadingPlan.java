@@ -1,4 +1,4 @@
-package com.example.biblereading;
+package com.afc.biblereading;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -17,17 +17,14 @@ public class CreateReadingPlan {
 	private final static int TOTAL_CHAPTERS = 1189;
 
 	private final static BibleIndex Bibleindex = new BibleIndex();
-	public static void CreatePlan(String planName, Date startDate,
-			Date endDate, MainActivity context) {
-
+	public static void CreatePlan(String planName, DateTime startDate,
+			DateTime endDate, MainActivity context) {
+		//TODO: need to gen uniqu plan id
+		int planId = 0;
 		LocalDataManage DOP = new LocalDataManage(context);
-		DOP.AddPlan(DOP, planName, startDate, endDate);
+		DOP.AddPlan(DOP, 0, planName, startDate, endDate);
         int totalReadingDays = 
-        		Days.daysBetween(new DateTime(startDate), 
-        				new DateTime(endDate)).getDays()+1;
-        
-        //TODO: find a way to get plan ID
-        int planId = 0;
+        		Days.daysBetween(startDate, endDate).getDays()+1;
         
         Log.v(Integer.toString(totalReadingDays),"timetime");
         Log.v(Integer.toString(TOTAL_CHAPTERS/totalReadingDays),"Chapter");

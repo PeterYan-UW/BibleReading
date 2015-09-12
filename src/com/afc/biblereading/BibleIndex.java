@@ -1,4 +1,4 @@
-package com.example.biblereading;
+package com.afc.biblereading;
 
 public class BibleIndex {
 	String[] BibleBookName = {"Ñì ¿”õ",

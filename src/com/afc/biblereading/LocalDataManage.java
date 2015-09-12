@@ -1,10 +1,11 @@
-package com.example.biblereading;
+package com.afc.biblereading;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -22,11 +23,11 @@ public class LocalDataManage extends SQLiteOpenHelper{
 //    private static final String  = "ReadingPlan";
     
     private static final String PLAN_TABLE_CREATE = "CREATE TABLE " + PLAN_TABLE + 
-    		" (plan_name TEXT, start_date INTEGER, end_date INTEGER);";
+    		" (plan_id INTEGER, plan_name TEXT, start_date INTEGER, end_date INTEGER);";
     
     private static final String DAILY_TASK_TABLE_CREATE = " CREATE TABLE " + DAILY_TASK_TABLE + 
-    		" (day start_chapter, plan_id INTEGER," +
-    		" book INTEGER, start_chapter INTEGER, end_chapter INTEGER," +
+    		" (day INGEGER, plan_id INTEGER," +
+    		" book INTEGER, start_chapter INTEGER, end_chapter INTEGER, status INTEGER, " +
     		" FOREIGN KEY(plan_id) REFERENCES " + PLAN_TABLE + "(rowid));";
 
     LocalDataManage(Context context) {
@@ -48,24 +49,16 @@ public class LocalDataManage extends SQLiteOpenHelper{
 		
 	}
 	
-	public void putInfo(LocalDataManage ldm, String plan_name){
-		SQLiteDatabase SQ = ldm.getWritableDatabase();
-		ContentValues cv = new ContentValues();
-		cv.put("plan_name", plan_name);
-		long k = SQ.insert(PLAN_TABLE, null, cv);
-		Log.d("Database operations", "One raw inserted");		
-	}
-	
 	public ArrayList<HashMap<String, Object>> getPlanInfo(LocalDataManage ldm){
 		ArrayList<HashMap<String, Object>> planList; 
 		planList = new ArrayList<HashMap<String, Object>>(); 
-		String selectQuery = "SELECT rowid, * FROM "+PLAN_TABLE; 
+		String selectQuery = "SELECT plan_id, plan_name, start_date, end_date FROM "+PLAN_TABLE; 
 		SQLiteDatabase SQ = ldm.getReadableDatabase();
 		Cursor cursor = SQ.rawQuery(selectQuery, null); 
 		if (cursor.moveToFirst()) { 
 			do { 
 				HashMap<String, Object> map = new HashMap<String, Object>(); 
-				map.put("uniq_id", cursor.getString(0));
+				map.put("plan_id", cursor.getString(0));
 				map.put("plan_name", cursor.getString(1));
 				map.put("start_day", cursor.getString(2));  
 				map.put("end_day", cursor.getString(3));  
@@ -75,10 +68,39 @@ public class LocalDataManage extends SQLiteOpenHelper{
 		return planList;
 	}
 	
+	public ArrayList<HashMap<String, Object>> getTodayTask(LocalDataManage ldm, int planId, Date startDay){
+		return getDailyTask(ldm, planId, new Date(), startDay);
+	}
+	
+	public ArrayList<HashMap<String, Object>> getDailyTask(LocalDataManage ldm, int planId, Date targetDay, Date startDay){
+		ArrayList<HashMap<String, Object>> taskList; 
+		taskList = new ArrayList<HashMap<String, Object>>();
+		int day = Days.daysBetween(new DateTime(targetDay), 
+        				new DateTime(startDay)).getDays()+1;
+		String selectQuery = "SELECT book, start_chapter, end_chapter, status FROM "
+								+ DAILY_TASK_TABLE
+								+ " WHERE plan_id = " + planId + " AND day = " + day +";";
+
+		Log.v("db today task query", selectQuery);
+		SQLiteDatabase SQ = ldm.getReadableDatabase();
+		Cursor cursor = SQ.rawQuery(selectQuery, null); 
+		if (cursor.moveToFirst()) { 
+			do { 
+				HashMap<String, Object> map = new HashMap<String, Object>();  
+				map.put("book", cursor.getString(0));  
+				map.put("start_chapter", cursor.getString(1));  
+				map.put("end_chapter", cursor.getString(2));  
+				map.put("status", cursor.getString(3));  
+				taskList.add(map); 
+			} while (cursor.moveToNext()); 
+		} // return contact list return wordList;
+		return taskList;
+	}
+	
 	public ArrayList<HashMap<String, Object>> getTaskInfo(LocalDataManage ldm){
-		ArrayList<HashMap<String, Object>> planList; 
-		planList = new ArrayList<HashMap<String, Object>>(); 
-		String selectQuery = "SELECT rowid, day, plan_id, book, start_chapter, end_chapter FROM "+DAILY_TASK_TABLE; 
+		ArrayList<HashMap<String, Object>> taskList; 
+		taskList = new ArrayList<HashMap<String, Object>>(); 
+		String selectQuery = "SELECT rowid, day, plan_id, book, start_chapter, end_chapter, status FROM "+DAILY_TASK_TABLE; 
 		SQLiteDatabase SQ = ldm.getReadableDatabase();
 		Cursor cursor = SQ.rawQuery(selectQuery, null); 
 		if (cursor.moveToFirst()) { 
@@ -90,15 +112,16 @@ public class LocalDataManage extends SQLiteOpenHelper{
 				map.put("book", cursor.getString(3));  
 				map.put("start_chapter", cursor.getString(4));  
 				map.put("end_chapter", cursor.getString(5));  
-				planList.add(map); 
+				taskList.add(map); 
 			} while (cursor.moveToNext()); 
 		} // return contact list return wordList;
-		return planList;
+		return taskList;
 	}
 
-	public void AddPlan(LocalDataManage ldm, String planName, Date startDate, Date endDate) {
+	public void AddPlan(LocalDataManage ldm, int planId, String planName, DateTime startDate, DateTime endDate) {
 		SQLiteDatabase SQ = ldm.getWritableDatabase();
 		ContentValues cv = new ContentValues();
+		cv.put("plan_id", planId);
 		cv.put("plan_name", planName);
 		cv.put("start_date", utils.getDateTime(startDate));
 		cv.put("end_date", utils.getDateTime(endDate));
@@ -115,6 +138,7 @@ public class LocalDataManage extends SQLiteOpenHelper{
 		cv.put("book", book);
 		cv.put("start_chapter", startChapter);
 		cv.put("end_chapter", endChapter);
+		cv.put("status", 0);
 		long k = SQ.insert(DAILY_TASK_TABLE, null, cv);
 		Log.d("Database operations", "One day task inserted");				
 	}

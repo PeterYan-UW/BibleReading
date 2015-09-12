@@ -1,4 +1,4 @@
-package com.example.biblereading;
+package com.afc.biblereading;
 
 import android.app.Activity;
 import android.os.Bundle;
