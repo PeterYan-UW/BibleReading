@@ -3,12 +3,6 @@ package com.example.biblereading;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
-
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,9 +24,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String value = settings.getString("Set?", "No");
-        Log.v("here i am".split("\\s+")[0],"split");
-        Log.v("here i am".split("\\s+")[1],"split");
-        Log.v("here i am".split("\\s+")[2],"split");
         
         LocalDataManage DOP = new LocalDataManage(this);
 		ArrayList<HashMap<String, Object>> result = DOP.getPlanInfo(DOP);
@@ -43,10 +34,12 @@ public class MainActivity extends Activity {
 		Log.d("database task return", String.valueOf(taskResult.size()));
 		Log.d("database task return", taskResult.toString());
 		
-//        if (value.equals("Yes")) {
-//        	setContentView(R.layout.activity_calender);
-//        }
-//        else {
+        if (value.equals("Yes")) {
+        	Intent intent = new Intent(this, CalenderActivity.class);
+        	
+        	startActivity(intent);
+        }
+        else {
         	setContentView(R.layout.activity_main);
             
             Typeface face0 = Typeface.createFromAsset(getAssets(),"fonts/fonts1.TTF");
@@ -58,7 +51,7 @@ public class MainActivity extends Activity {
             StartDateText.setTypeface(face1);
             TextView EndDateText = (TextView) findViewById(R.id.EndDateText);
             EndDateText.setTypeface(face1);
-//        }
+        }
     }
 
     @Override
@@ -102,4 +95,5 @@ public class MainActivity extends Activity {
         
     	startActivity(intent);
     }
+    
 }

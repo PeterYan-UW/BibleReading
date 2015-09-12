@@ -2,18 +2,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >    
-    
-    <TextView
-        android:id="@+id/textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    android:orientation="vertical" >
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/TodayMissionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="今日读经计划"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <ListView 
+        android:id="@+id/TodayMission"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" >
+    </ListView>
+
+    
+
+    <LinearLayout 
         android:id="@+id/calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
     </LinearLayout>
+
+    <Button
+        android:id="@+id/reset"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset"
+        android:onClick="ResetDays" />
+
+    
 
 </LinearLayout>

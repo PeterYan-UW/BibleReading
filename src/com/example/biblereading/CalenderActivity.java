@@ -1,25 +1,51 @@
 package com.example.biblereading;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
+
+
+
+
+
+
+
+
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 @SuppressLint("SimpleDateFormat")
-public class CalenderActivity extends FragmentActivity {
+public class CalenderActivity extends FragmentActivity{
 	private boolean undo = false;
 	private CaldroidFragment caldroidFragment;
 	private CaldroidFragment dialogCaldroidFragment;
+	private int index;
 
 	private void setCustomResourceForDates() {
 		Calendar cal = Calendar.getInstance();
@@ -87,7 +113,7 @@ public class CalenderActivity extends FragmentActivity {
 		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 		t.replace(R.id.calendar, caldroidFragment);
 		t.commit();
-
+		final Intent intent = new Intent(this, DailyMission.class);
 		// Setup listener
 		final CaldroidListener listener = new CaldroidListener() {
 
@@ -95,7 +121,10 @@ public class CalenderActivity extends FragmentActivity {
 			public void onSelectDate(Date date, View view) {
 				Toast.makeText(getApplicationContext(), formatter.format(date),
 						Toast.LENGTH_SHORT).show();
-
+				
+				
+		    	
+		    	startActivity(intent);
 			}
 
 			@Override
@@ -126,7 +155,48 @@ public class CalenderActivity extends FragmentActivity {
 		// Setup Caldroid
 		caldroidFragment.setCaldroidListener(listener);
 
-		final TextView textView = (TextView) findViewById(R.id.textview);
+		
+		createScheduledNotification();
+		
+		Typeface face0 = Typeface.createFromAsset(getAssets(),"fonts/fonts1.TTF");
+        TextView TodayMissionTitle = (TextView) findViewById(R.id.TodayMissionTitle);
+        TodayMissionTitle.setTypeface(face0);
+		
+        ListView TodayMission = (ListView) findViewById(R.id.TodayMission);
+        TodayMission.setBackgroundColor(Color.WHITE);
+        
+		final String[] s = {"b","a","c","d","a","c","d","a","c","d","a","c","d","a","c","d","a","c","d","a","c","d"};
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+				this,
+				R.layout.single_item,
+				s);
+		
+		Log.v(Integer.toString(TodayMission.getCount()),"view");
+		TodayMission.setAdapter(adapter);
+		TodayMission.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		TodayMission.setOnItemClickListener(new OnItemClickListener() {
+			  
+			  @Override
+			  public void onItemClick(AdapterView<?> parent, View view,
+			    int position, long id) {
+				  	index = position;
+				  	String name = s[position];
+				  	View v = (View) parent.getChildAt(index);
+				  	((TextView) view).setText("hello");
+				  	s[position] = "hello";
+//				  	if (view.getContext().toString().equals(name)) {
+//				  		Log.v("yes","test");
+//				  	}
+//				  	else {
+//				  		Log.v("no","test");
+//				  	}
+//				  	ListView LV = (ListView) findViewById(R.id.TodayMission);
+//				  	View v = (View) LV.getChildAt(position);
+//				  	
+//					v.setBackgroundColor(Color.GREEN);
+			  }
+		});
+		
 	}
 
 	/**
@@ -146,5 +216,49 @@ public class CalenderActivity extends FragmentActivity {
 					"DIALOG_CALDROID_SAVED_STATE");
 		}
 	}
-
+	public void ResetDays(View view){
+    	Intent intent = new Intent(this, MainActivity.class);
+    	SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("Set?", "No");
+        editor.commit();
+        LocalDataManage DOP = new LocalDataManage(this);
+		DOP.DeletePlan(DOP);
+    	startActivity(intent);
+    	
+    }
+	
+	private void createScheduledNotification() {
+	
+		// Get new calendar object and set the date to now
+	
+		Calendar calendar = Calendar.getInstance();
+	
+		calendar.setTimeInMillis(System.currentTimeMillis());
+	
+		// Add defined amount of days to the date
+	
+		calendar.add(Calendar.SECOND, 10);
+		
+		// Retrieve alarm manager from the system
+	
+		AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(getBaseContext().ALARM_SERVICE);
+	
+	 	// Every scheduled intent needs a different ID, else it is just executed once
+	
+		int id = (int) System.currentTimeMillis();
+	
+	 	// Prepare the intent which should be launched at the date
+	
+	 	Intent intent = new Intent(this, TimeAlarm.class);	 
+	
+	 // Prepare the pending intent
+	
+	 	PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		
+	 	// Register the alert in the system. You have the option to define if the device has to wake up on the alert or not
+	 	Log.v("first","notify");
+		//alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60, pendingIntent);
+	}
+	
 }

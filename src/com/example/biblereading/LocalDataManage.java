@@ -118,4 +118,10 @@ public class LocalDataManage extends SQLiteOpenHelper{
 		long k = SQ.insert(DAILY_TASK_TABLE, null, cv);
 		Log.d("Database operations", "One day task inserted");				
 	}
+	
+	public void DeletePlan(LocalDataManage ldm){
+		SQLiteDatabase SQ = ldm.getWritableDatabase();
+		SQ.delete(DAILY_TASK_TABLE, null, null);
+		SQ.delete(PLAN_TABLE, null, null);
+	}
 }
