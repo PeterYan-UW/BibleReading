@@ -24,9 +24,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String value = settings.getString("Set?", "No");
-        Log.v("here i am".split("\\s+")[0],"split");
-        Log.v("here i am".split("\\s+")[1],"split");
-        Log.v("here i am".split("\\s+")[2],"split");
         
         LocalDataManage DOP = new LocalDataManage(this);
 		ArrayList<HashMap<String, Object>> result = DOP.getPlanInfo(DOP);

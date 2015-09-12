@@ -26,9 +26,14 @@
             android:name=".CalenderActivity"
             android:label="@string/title_activity_calender" >
         </activity>
+        <activity
+            android:name=".DailyMission"
+            android:label="@string/title_activity_dailymission" >
+        </activity>
         <receiver android:name="com.example.biblereading.TimeAlarm" />
-    
+    	
     </application>
-	
+    
+	<uses-permission android:name="android.permission.INTERNET" /> 
 
 </manifest>
