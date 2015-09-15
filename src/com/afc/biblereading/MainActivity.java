@@ -32,8 +32,6 @@ public class MainActivity extends Activity {
     	
         super.onCreate(savedInstanceState);
         DOP = ((ApplicationSingleton)getApplication()).getDataBase();
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        String value = settings.getString("Set?", "No");
         
 		ArrayList<HashMap<String, Object>> result = DOP.getPlanInfo(DOP);
 		Log.d("database plan return", String.valueOf(result.size()));
@@ -91,13 +89,6 @@ public class MainActivity extends Activity {
         endDate = new DateTime(EndDateValue.getYear(), EndDateValue.getMonth()+1, EndDateValue.getDayOfMonth(),0,0,0,0);
         
         CreateReadingPlan.CreatePlan(DOP, planName, startDate, endDate, this);
-        
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("Set?", "No");
-
-        // Commit the edits!
-        editor.commit();
         
     	startActivity(intent);
     }

@@ -68,6 +68,23 @@ public class LocalDataManage extends SQLiteOpenHelper{
 		return planList;
 	}
 	
+	public ArrayList<Integer> getUnfinishedToday(LocalDataManage ldm, int planId, Date startDay){
+		ArrayList<Integer> taskList; 
+		taskList = new ArrayList<Integer>();
+		int day = Days.daysBetween(new DateTime(startDay),new DateTime(new Date())).getDays()+1;
+		String selectQuery = "SELECT day FROM " + DAILY_TASK_TABLE
+				+ " WHERE plan_id = " + planId + " AND status = 0;";
+		SQLiteDatabase SQ = ldm.getReadableDatabase();
+		Cursor cursor = SQ.rawQuery(selectQuery, null); 
+		if (cursor.moveToFirst()) { 
+			do {
+				taskList.add(cursor.getInt(0)); 
+			} while (cursor.moveToNext()); 
+		} // return contact list return wordList;
+		Log.v("tasks: ", taskList.toString());
+		return taskList;
+	}
+	
 	public ArrayList<HashMap<String, Object>> getTodayTask(LocalDataManage ldm, int planId, Date startDay){
 		return getDailyTask(ldm, planId, new Date(), startDay);
 	}
