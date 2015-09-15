@@ -1,5 +1,7 @@
 package com.afc.biblereading;
 
+import java.awt.font.TextAttribute;
+import java.text.AttributedString;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +15,7 @@ import com.roomorama.caldroid.CaldroidListener;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -39,7 +42,8 @@ public class CalenderActivity extends FragmentActivity{
 	private CaldroidFragment caldroidFragment;
 	private CaldroidFragment dialogCaldroidFragment;
 	private int index;
-
+	public static LocalDataManage DOP;
+	public static Date targetDay;
 	private void setCustomResourceForDates() {
 		Calendar cal = Calendar.getInstance();
 
@@ -105,27 +109,30 @@ public class CalenderActivity extends FragmentActivity{
 		final Intent intent = new Intent(this, DailyMission.class);
 		
 		int plan_id = -1;
+		int BooksNumToday=0;
 		Date startDay = null;
-		LocalDataManage DOP = new LocalDataManage(this);
-		ArrayList<HashMap<String, Object>> plans = DOP.getPlanInfo(DOP);
+		DOP = new LocalDataManage(this);
+		final ArrayList<HashMap<String, Object>> plans = DOP.getPlanInfo(DOP);
 		if (plans.size()==1){
 			plan_id = Integer.parseInt((String) plans.get(0).get("plan_id"));
+			Log.v((String) plans.get(0).get("start_day"),"chapternum");
 			startDay = utils.formatDateTime(this, (String) plans.get(0).get("start_day"));
 			ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
 //			Log.d("database task return", String.valueOf(taskResult.size()));
 			Log.d("today task return", todayTask.toString());
+			Log.v(Integer.toString(todayTask.size()),"task");
+			BooksNumToday=todayTask.size();
 		}
 		
 		// Setup listener
 		final CaldroidListener listener = new CaldroidListener() {
-
+			
 			@Override
 			public void onSelectDate(Date date, View view) {
 				Toast.makeText(getApplicationContext(), formatter.format(date),
 						Toast.LENGTH_SHORT).show();
+				targetDay = date;
 				
-				
-		    	
 		    	startActivity(intent);
 			}
 
@@ -166,7 +173,23 @@ public class CalenderActivity extends FragmentActivity{
         ListView TodayMission = (ListView) findViewById(R.id.TodayMission);
         TodayMission.setBackgroundColor(Color.WHITE);
         
-		final String[] s = {"b","a","c","d","a","c","d","a","c","d","a","c","d","a","c","d","a","c","d","a","c","d"};
+		final String[] s = new String[BooksNumToday];
+		for (int i=0;i<BooksNumToday;i++) {
+			ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
+			BibleIndex bibleindex = new BibleIndex();
+			String start_chapter = todayTask.get(i).get("start_chapter").toString();
+			String end_chapter = todayTask.get(i).get("end_chapter").toString();
+			if (start_chapter.equals(end_chapter)) {
+				Log.v("here1","here");
+				s[i]=bibleindex.BibleBookName[Integer.parseInt(todayTask.get(i).get("book").toString())]+"  µÚ"+start_chapter+"ÕÂ";
+			}
+			else {
+				Log.v("here2","here");
+				s[i]=bibleindex.BibleBookName[Integer.parseInt(todayTask.get(i).get("book").toString())]+"  µÚ"+start_chapter+"-"+end_chapter+"ÕÂ";
+			}
+			
+			
+		}
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 				this,
 				R.layout.single_item,
@@ -182,9 +205,12 @@ public class CalenderActivity extends FragmentActivity{
 			    int position, long id) {
 				  	index = position;
 				  	String name = s[position];
-				  	View v = (View) parent.getChildAt(index);
-				  	((TextView) view).setText("hello");
-				  	s[position] = "hello";
+				  	
+				  	AttributedString as = new AttributedString(name);
+				  	as.addAttribute(TextAttribute.STRIKETHROUGH,
+				  	        TextAttribute.STRIKETHROUGH_ON);
+				  	((TextView) view).setText(name+"¡Ì");
+				  	s[position] = name+"¡Ì";
 //				  	if (view.getContext().toString().equals(name)) {
 //				  		Log.v("yes","test");
 //				  	}

@@ -23,6 +23,9 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	public static final String PREFS_NAME = "MyPrefsFile";
+	public static DateTime startDate;
+	public static DateTime endDate;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	
@@ -86,14 +89,14 @@ public class MainActivity extends Activity {
     	DatePicker StartDateValue = (DatePicker) findViewById(R.id.StartDateValue);
         DatePicker EndDateValue = (DatePicker) findViewById(R.id.EndDateValue);        
 
-        DateTime startDate = new DateTime(StartDateValue.getYear(), StartDateValue.getMonth()+1, StartDateValue.getDayOfMonth(),0,0,0,0);
-        DateTime endDate = new DateTime(EndDateValue.getYear(), EndDateValue.getMonth()+1, EndDateValue.getDayOfMonth(),0,0,0,0);
+        startDate = new DateTime(StartDateValue.getYear(), StartDateValue.getMonth()+1, StartDateValue.getDayOfMonth(),0,0,0,0);
+        endDate = new DateTime(EndDateValue.getYear(), EndDateValue.getMonth()+1, EndDateValue.getDayOfMonth(),0,0,0,0);
         
         CreateReadingPlan.CreatePlan(planName, startDate, endDate, this);
         
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString("Set?", "Yes");
+        editor.putString("Set?", "No");
 
         // Commit the edits!
         editor.commit();
