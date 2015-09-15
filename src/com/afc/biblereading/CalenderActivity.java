@@ -1,7 +1,5 @@
 package com.afc.biblereading;
 
-import java.awt.font.TextAttribute;
-import java.text.AttributedString;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,19 +13,17 @@ import com.roomorama.caldroid.CaldroidListener;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,29 +35,7 @@ public class CalenderActivity extends FragmentActivity{
 	private CaldroidFragment caldroidFragment;
 	private CaldroidFragment dialogCaldroidFragment;
 	private int index;
-	public static LocalDataManage DOP;
 	public static Date targetDay;
-	private void setCustomResourceForDates() {
-		Calendar cal = Calendar.getInstance();
-
-		// Min date is last 7 days
-		cal.add(Calendar.DATE, -18);
-		Date blueDate = cal.getTime();
-
-		// Max date is next 7 days
-		cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, 16);
-		Date greenDate = cal.getTime();
-
-		if (caldroidFragment != null) {
-			caldroidFragment.setBackgroundResourceForDate(R.color.blue,
-					blueDate);
-			caldroidFragment.setBackgroundResourceForDate(R.color.green,
-					greenDate);
-			caldroidFragment.setTextColorForDate(R.color.white, blueDate);
-			caldroidFragment.setTextColorForDate(R.color.white, greenDate);
-		}
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +44,58 @@ public class CalenderActivity extends FragmentActivity{
 
 		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
 
+		// Setup today's task title		
+		Typeface face0 = Typeface.createFromAsset(getAssets(),"fonts/fonts1.TTF");
+        TextView TodayMissionTitle = (TextView) findViewById(R.id.TodayMissionTitle);
+        TodayMissionTitle.setTypeface(face0);
+
+		// Setup today's task list
+        int plan_id = -1;
+		Date startDay = null;
+		LocalDataManage DOP = ((ApplicationSingleton)getApplication()).getDataBase();
+		final ArrayList<HashMap<String, Object>> plans = DOP.getPlanInfo(DOP);
+		
+		plan_id = (Integer) plans.get(0).get("plan_id");
+		Log.v((String) plans.get(0).get("start_day"),"chapternum");
+		startDay = utils.formatDateTime(this, (String) plans.get(0).get("start_day"));
+		ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
+		
+		Log.d("today task return", todayTask.toString());
+		int BooksNumToday = todayTask.size();
+		
+        ListView TodayMission = (ListView) findViewById(R.id.TodayMission);
+        
+        ArrayList<Task> taskList = new ArrayList<Task>();
+		for (int i=0;i<BooksNumToday;i++) {
+			int id = (Integer) todayTask.get(i).get("id");
+			int book = (Integer) todayTask.get(i).get("book");
+			int start_chapter = (Integer) todayTask.get(i).get("start_chapter");
+			int end_chapter = (Integer) todayTask.get(i).get("end_chapter");
+			Boolean done = (Integer) todayTask.get(i).get("status") == 1;			
+			Task task = new Task(id, book, start_chapter, end_chapter, done);
+			taskList.add(task);
+		}
+		CustomCheckboxAdapter dataAdapter = new CustomCheckboxAdapter(
+				this, R.layout.single_item, taskList);
+		
+		Log.v(Integer.toString(TodayMission.getCount()),"view");
+		TodayMission.setAdapter(dataAdapter);
+//		TodayMission.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		TodayMission.setOnItemClickListener(new OnItemClickListener() {
+			  
+			  @Override
+			  public void onItemClick(AdapterView<?> parent, View view,
+			    int position, long id) {
+				  	index = position;
+				  	Task task = (Task) parent.getItemAtPosition(position);
+				  	
+				  	Toast.makeText(getApplicationContext(),
+				  			"Clicked on Row: " + task.asString(),
+				  			Toast.LENGTH_LONG).show();
+			  }
+		});
+		
 		// Setup caldroid fragment
-		// **** If you want normal CaldroidFragment, use below line ****
 		caldroidFragment = new CaldroidFragment();
 
 		// Setup arguments
@@ -89,14 +113,8 @@ public class CalenderActivity extends FragmentActivity{
 			args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
 			args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
 			args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
-
-			// Uncomment this to customize startDayOfWeek
-			// args.putInt(CaldroidFragment.START_DAY_OF_WEEK,
-			// CaldroidFragment.TUESDAY); // Tuesday
 			caldroidFragment.setArguments(args);
 		}
-
-		setCustomResourceForDates();
 
 		// Attach to the activity
 		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -105,40 +123,23 @@ public class CalenderActivity extends FragmentActivity{
 		
 		final Intent intent = new Intent(this, DailyMission.class);
 		
-		int plan_id = -1;
-		int BooksNumToday=0;
-		Date startDay = null;
-		DOP = new LocalDataManage(this);
-		final ArrayList<HashMap<String, Object>> plans = DOP.getPlanInfo(DOP);
-		if (plans.size()==1){
-			plan_id = Integer.parseInt((String) plans.get(0).get("plan_id"));
-			Log.v((String) plans.get(0).get("start_day"),"chapternum");
-			startDay = utils.formatDateTime(this, (String) plans.get(0).get("start_day"));
-			ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
-//			Log.d("database task return", String.valueOf(taskResult.size()));
-			Log.d("today task return", todayTask.toString());
-			Log.v(Integer.toString(todayTask.size()),"task");
-			BooksNumToday=todayTask.size();
-		}
-		
 		// Setup listener
 		final CaldroidListener listener = new CaldroidListener() {
 			
 			@Override
 			public void onSelectDate(Date date, View view) {
-				Toast.makeText(getApplicationContext(), formatter.format(date),
-						Toast.LENGTH_SHORT).show();
-				targetDay = date;
-				
+//				Toast.makeText(getApplicationContext(), formatter.format(date),
+//						Toast.LENGTH_SHORT).show();
+				targetDay = date;				
 		    	startActivity(intent);
 			}
 
-			@Override
-			public void onChangeMonth(int month, int year) {
-				String text = "month: " + month + " year: " + year;
-				Toast.makeText(getApplicationContext(), text,
-						Toast.LENGTH_SHORT).show();
-			}
+//			@Override
+//			public void onChangeMonth(int month, int year) {
+//				String text = "month: " + month + " year: " + year;
+//				Toast.makeText(getApplicationContext(), text,
+//						Toast.LENGTH_SHORT).show();
+//			}
 
 			@Override
 			public void onLongClickDate(Date date, View view) {
@@ -161,65 +162,8 @@ public class CalenderActivity extends FragmentActivity{
 		// Setup Caldroid
 		caldroidFragment.setCaldroidListener(listener);
 
+		// Get Today's Task
 		createScheduledNotification();
-		
-		Typeface face0 = Typeface.createFromAsset(getAssets(),"fonts/fonts1.TTF");
-        TextView TodayMissionTitle = (TextView) findViewById(R.id.TodayMissionTitle);
-        TodayMissionTitle.setTypeface(face0);
-		
-        ListView TodayMission = (ListView) findViewById(R.id.TodayMission);
-        TodayMission.setBackgroundColor(Color.WHITE);
-        
-		final String[] s = new String[BooksNumToday];
-		for (int i=0;i<BooksNumToday;i++) {
-			ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
-			BibleIndex bibleindex = new BibleIndex();
-			String start_chapter = todayTask.get(i).get("start_chapter").toString();
-			String end_chapter = todayTask.get(i).get("end_chapter").toString();
-			if (start_chapter.equals(end_chapter)) {
-				Log.v("here1","here");
-				s[i]=bibleindex.BibleBookName[Integer.parseInt(todayTask.get(i).get("book").toString())]+"  µÚ"+start_chapter+"ÕÂ";
-			}
-			else {
-				Log.v("here2","here");
-				s[i]=bibleindex.BibleBookName[Integer.parseInt(todayTask.get(i).get("book").toString())]+"  µÚ"+start_chapter+"-"+end_chapter+"ÕÂ";
-			}
-			
-			
-		}
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-				this,
-				R.layout.single_item,
-				s);
-		
-		Log.v(Integer.toString(TodayMission.getCount()),"view");
-		TodayMission.setAdapter(adapter);
-		TodayMission.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-		TodayMission.setOnItemClickListener(new OnItemClickListener() {
-			  
-			  @Override
-			  public void onItemClick(AdapterView<?> parent, View view,
-			    int position, long id) {
-				  	index = position;
-				  	String name = s[position];
-				  	
-				  	AttributedString as = new AttributedString(name);
-				  	as.addAttribute(TextAttribute.STRIKETHROUGH,
-				  	        TextAttribute.STRIKETHROUGH_ON);
-				  	((TextView) view).setText(name+"¡Ì");
-				  	s[position] = name+"¡Ì";
-//				  	if (view.getContext().toString().equals(name)) {
-//				  		Log.v("yes","test");
-//				  	}
-//				  	else {
-//				  		Log.v("no","test");
-//				  	}
-//				  	ListView LV = (ListView) findViewById(R.id.TodayMission);
-//				  	View v = (View) LV.getChildAt(position);
-//				  	
-//					v.setBackgroundColor(Color.GREEN);
-			  }
-		});
 		
 	}
 
@@ -286,4 +230,25 @@ public class CalenderActivity extends FragmentActivity{
 		//alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60, pendingIntent);
 	}
 	
+	private Boolean exit = false;
+	@Override
+    public void onBackPressed() {
+        if (exit) {
+        	Intent intent = new Intent(Intent.ACTION_MAIN);
+        	intent.addCategory(Intent.CATEGORY_HOME);
+        	intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        	startActivity(intent);
+        } else {
+            Toast.makeText(this, "Press Back again to Exit.",
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
+        }
+
+    }
 }

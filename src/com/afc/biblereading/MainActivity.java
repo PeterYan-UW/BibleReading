@@ -25,24 +25,22 @@ public class MainActivity extends Activity {
 	public static final String PREFS_NAME = "MyPrefsFile";
 	public static DateTime startDate;
 	public static DateTime endDate;
+	LocalDataManage DOP;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	
         super.onCreate(savedInstanceState);
+        DOP = ((ApplicationSingleton)getApplication()).getDataBase();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String value = settings.getString("Set?", "No");
         
-        LocalDataManage DOP = new LocalDataManage(this);
 		ArrayList<HashMap<String, Object>> result = DOP.getPlanInfo(DOP);
 		Log.d("database plan return", String.valueOf(result.size()));
 		Log.d("database plan return", result.toString());
 		
-		ArrayList<HashMap<String, Object>> taskResult = DOP.getTaskInfo(DOP);
-		Log.d("database task return", String.valueOf(taskResult.size()));
-		Log.d("database task return", taskResult.toString());
-		
-        if (value.equals("Yes")) {
+//        if (value.equals("Yes")) {
+        if (result.size()>0) {
         	Intent intent = new Intent(this, CalenderActivity.class);
         	
         	startActivity(intent);
@@ -92,7 +90,7 @@ public class MainActivity extends Activity {
         startDate = new DateTime(StartDateValue.getYear(), StartDateValue.getMonth()+1, StartDateValue.getDayOfMonth(),0,0,0,0);
         endDate = new DateTime(EndDateValue.getYear(), EndDateValue.getMonth()+1, EndDateValue.getDayOfMonth(),0,0,0,0);
         
-        CreateReadingPlan.CreatePlan(planName, startDate, endDate, this);
+        CreateReadingPlan.CreatePlan(DOP, planName, startDate, endDate, this);
         
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
