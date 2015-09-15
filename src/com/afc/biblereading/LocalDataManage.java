@@ -75,11 +75,10 @@ public class LocalDataManage extends SQLiteOpenHelper{
 	public ArrayList<HashMap<String, Object>> getDailyTask(LocalDataManage ldm, int planId, Date targetDay, Date startDay){
 		ArrayList<HashMap<String, Object>> taskList; 
 		taskList = new ArrayList<HashMap<String, Object>>();
-		int day = Days.daysBetween(new DateTime(targetDay), 
-        				new DateTime(startDay)).getDays()+1;
+		int day = Days.daysBetween(new DateTime(startDay),new DateTime(targetDay)).getDays()+1;
 		String selectQuery = "SELECT book, start_chapter, end_chapter, status FROM "
 								+ DAILY_TASK_TABLE
-								+ " WHERE plan_id = " + planId + " AND day = " + day +";";
+								+ " WHERE plan_id = " + planId + " AND day = " + day + " ORDER BY book;";
 
 		Log.v("db today task query", selectQuery);
 		SQLiteDatabase SQ = ldm.getReadableDatabase();
