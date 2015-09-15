@@ -3,7 +3,7 @@ package com.afc.biblereading;
 import android.app.Application;
 
 public class ApplicationSingleton extends Application {
-	public LocalDataManage LDM;
+	private LocalDataManage LDM;
 	
     @Override
     public void onCreate() {

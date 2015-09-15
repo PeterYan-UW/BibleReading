@@ -17,6 +17,12 @@ public class utils {
         return dateFormat.format(date.toDate());
 	}
 	
+	public static String printDate(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyyƒÍMM‘¬dd»’", Locale.getDefault());
+        return dateFormat.format(date);
+	}
+	
 	public static Date formatDateTime(Context context, String timeToFormat) {
 	    SimpleDateFormat iso8601Format = new SimpleDateFormat(
 	            "yyyy-MM-dd HH:mm:ss");

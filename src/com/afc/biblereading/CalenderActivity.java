@@ -130,16 +130,10 @@ public class CalenderActivity extends FragmentActivity{
 			public void onSelectDate(Date date, View view) {
 //				Toast.makeText(getApplicationContext(), formatter.format(date),
 //						Toast.LENGTH_SHORT).show();
-				targetDay = date;				
+				targetDay = date;	
 		    	startActivity(intent);
+//				DailyMission.dailyTitle.setText("test");
 			}
-
-//			@Override
-//			public void onChangeMonth(int month, int year) {
-//				String text = "month: " + month + " year: " + year;
-//				Toast.makeText(getApplicationContext(), text,
-//						Toast.LENGTH_SHORT).show();
-//			}
 
 			@Override
 			public void onLongClickDate(Date date, View view) {

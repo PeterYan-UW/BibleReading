@@ -5,14 +5,21 @@ import java.util.Date;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class DailyMission extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dailymission);
+		Typeface face0 = Typeface.createFromAsset(getAssets(),"fonts/fonts1.TTF");
+		TextView dailyTitle = (TextView) findViewById(R.id.dailyTitle);
+		dailyTitle.setText(utils.printDate(CalenderActivity.targetDay)+"¶Á¾­");
+		dailyTitle.setTypeface(face0);
 		populateListView();
 	}
 	
