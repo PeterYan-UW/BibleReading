@@ -110,7 +110,8 @@ public class LocalDataManage extends SQLiteOpenHelper{
 				map.put("plan_id", cursor.getString(2));  
 				map.put("book", cursor.getString(3));  
 				map.put("start_chapter", cursor.getString(4));  
-				map.put("end_chapter", cursor.getString(5));  
+				map.put("end_chapter", cursor.getString(5));   
+				map.put("status", cursor.getString(6));  
 				taskList.add(map); 
 			} while (cursor.moveToNext()); 
 		} // return contact list return wordList;
