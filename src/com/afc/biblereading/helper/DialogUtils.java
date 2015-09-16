@@ -1,4 +1,4 @@
-package com.afc.biblereading.user.utils;
+package com.afc.biblereading.helper;
 
 import com.afc.biblereading.R;
 

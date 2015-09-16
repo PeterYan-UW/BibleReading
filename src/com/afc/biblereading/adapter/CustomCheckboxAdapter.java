@@ -1,6 +1,11 @@
-package com.afc.biblereading;
+package com.afc.biblereading.adapter;
 
 import java.util.ArrayList;
+
+import com.afc.biblereading.R;
+import com.afc.biblereading.Task;
+import com.afc.biblereading.R.id;
+import com.afc.biblereading.R.layout;
 
 import android.content.Context;
 import android.util.Log;

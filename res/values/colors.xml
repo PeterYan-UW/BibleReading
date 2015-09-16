@@ -12,4 +12,5 @@
     <item name="failed" type="color">#F90101</item>
     <item name="passed" type="color">#00933B</item>
     <item name="future" type="color">#0266C8</item>
+    <item name="background_color" type="color">#fff</item>
 </resources>

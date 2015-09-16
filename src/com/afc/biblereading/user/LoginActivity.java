@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.afc.biblereading.R;
-import com.afc.biblereading.user.helper.DataHolder;
-import com.afc.biblereading.user.utils.DialogUtils;
+import com.afc.biblereading.helper.DataHolder;
+import com.afc.biblereading.helper.DialogUtils;
 import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.core.QBSettings;
 import com.quickblox.auth.QBAuth;
@@ -19,6 +19,10 @@ import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
+
+
 
 
 
@@ -50,7 +54,8 @@ public class LoginActivity extends Activity{
         QBAuth.createSession(new QBEntityCallbackImpl<QBSession>() {
             @Override
             public void onSuccess(QBSession qbSession, Bundle bundle) {
-                getAllUser();
+            	startLogin();
+//                getAllUser();
             }
 
             @Override
@@ -67,25 +72,31 @@ public class LoginActivity extends Activity{
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void getAllUser() {
+//    private void getAllUser() {
+//
+//        QBUsers.getUsers(null, new QBEntityCallbackImpl<ArrayList<QBUser>>() {
+//            @Override
+//            public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
+//                DataHolder.getDataHolder().setQbUsersList(qbUsers);
+//                startGetAllUsersActivity();
+//            }
+//
+//            @Override
+//            public void onError(List<String> errors) {
+//                DialogUtils.showLong(context, errors.get(0));
+//            }
+//        });
+//    }
 
-        QBUsers.getUsers(null, new QBEntityCallbackImpl<ArrayList<QBUser>>() {
-            @Override
-            public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
-                DataHolder.getDataHolder().setQbUsersList(qbUsers);
-                startGetAllUsersActivity();
-            }
-
-            @Override
-            public void onError(List<String> errors) {
-                DialogUtils.showLong(context, errors.get(0));
-            }
-        });
-    }
-
-    private void startGetAllUsersActivity() {
-        Intent intent = new Intent(this, UsersListActivity.class);
-        startActivity(intent);
-        finish();
+//    private void startGetAllUsersActivity() {
+//        Intent intent = new Intent(this, UsersListActivity.class);
+//        startActivity(intent);
+//        finish();
+//    }
+    private void startLogin(){
+      Intent intent = new Intent(this, UsersListActivity.class);
+      startActivity(intent);
+      finish();
+    	
     }
 }

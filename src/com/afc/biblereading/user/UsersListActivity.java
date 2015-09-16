@@ -1,28 +1,34 @@
 package com.afc.biblereading.user;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
+import com.afc.biblereading.R;
+import com.afc.biblereading.adapter.UserListAdapter;
+import com.afc.biblereading.helper.DataHolder;
+import com.afc.biblereading.helper.DialogUtils;
 import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.users.QBUsers;
-import com.quickblox.sample.user.R;
-import com.quickblox.sample.user.adapter.UserListAdapter;
-import com.quickblox.sample.user.helper.DataHolder;
-import com.quickblox.sample.user.utils.DialogUtils;
 
 import java.util.List;
 
-import static com.quickblox.sample.user.definitions.Consts.POSITION;
+import static com.afc.biblereading.user.definitions.Consts.POSITION;
 
-public class UsersListActivity extends Activity implements AdapterView.OnItemClickListener {
+public class UsersListActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
-    private UserListAdapter usersListAdapter;
-    private ListView usersList;
+//    private UserListAdapter usersListAdapter;
+//    private ListView usersList;
+    private ScrollView userInfo;
+    private TextView askLogin;
+    private TextView loginTextView;
+    private TextView emailTextView;
+    private TextView fullNameTextView;
     private Button logOutButton;
     private Button signInButton;
     private Button selfEditButton;
@@ -31,25 +37,34 @@ public class UsersListActivity extends Activity implements AdapterView.OnItemCli
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_users_list);
-
+        setContentView(R.layout.activity_user);
         initUI();
-        initUsersList();
+//        initUsersList();
     }
 
     private void initUI() {
+    	userInfo = (ScrollView) findViewById(R.id.user_info_scrollview);
+    	askLogin = (TextView) findViewById(R.id.no_user);
+    	loginTextView = (TextView) findViewById(R.id.login_textview);
+        emailTextView = (TextView) findViewById(R.id.email_textview);
+        fullNameTextView = (TextView) findViewById(R.id.full_name_textview);
         logOutButton = (Button) findViewById(R.id.logout_button);
         signInButton = (Button) findViewById(R.id.sign_in_button);
         selfEditButton = (Button) findViewById(R.id.self_edit_button);
         singUpButton = (Button) findViewById(R.id.sign_up_button);
-        usersList = (ListView) findViewById(R.id.users_listview);
+//        usersList = (ListView) findViewById(R.id.users_listview);
     }
 
-    private void initUsersList() {
-        usersListAdapter = new UserListAdapter(this);
-        usersList.setAdapter(usersListAdapter);
-        usersList.setOnItemClickListener(this);
+    private void fillAllFields() {
+        fillField(loginTextView, DataHolder.getDataHolder().getSignInUserLogin());
+        fillField(emailTextView, DataHolder.getDataHolder().getSignInUserEmail());
+        fillField(fullNameTextView, DataHolder.getDataHolder().getSignInUserFullName());
     }
+//    private void initUsersList() {
+//        usersListAdapter = new UserListAdapter(this);
+//        usersList.setAdapter(usersListAdapter);
+//        usersList.setOnItemClickListener(this);
+//    }
 
     @Override
     public void onResume() {
@@ -57,10 +72,12 @@ public class UsersListActivity extends Activity implements AdapterView.OnItemCli
         if (DataHolder.getDataHolder().getSignInQbUser() != null) {
             signInButton.setVisibility(View.GONE);
             singUpButton.setVisibility(View.GONE);
+            askLogin.setVisibility(View.GONE);
+            userInfo.setVisibility(View.VISIBLE);
             logOutButton.setVisibility(View.VISIBLE);
             selfEditButton.setVisibility(View.VISIBLE);
         }
-        usersListAdapter.notifyDataSetChanged();
+//        usersListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -74,7 +91,9 @@ public class UsersListActivity extends Activity implements AdapterView.OnItemCli
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             signInButton.setVisibility(View.GONE);
+            askLogin.setVisibility(View.GONE);
             logOutButton.setVisibility(View.VISIBLE);
+            fillAllFields();
         }
     }
 
@@ -122,6 +141,8 @@ public class UsersListActivity extends Activity implements AdapterView.OnItemCli
     private void updateDataAfterLogOut() {
         DataHolder.getDataHolder().setSignInQbUser(null);
         signInButton.setVisibility(View.VISIBLE);
+        askLogin.setVisibility(View.VISIBLE);
+        userInfo.setVisibility(View.GONE);
         logOutButton.setVisibility(View.GONE);
         selfEditButton.setVisibility(View.GONE);
         singUpButton.setVisibility(View.VISIBLE);

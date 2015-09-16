@@ -7,6 +7,8 @@ import java.util.HashMap;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import com.afc.biblereading.helper.util;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -120,8 +122,8 @@ public class LocalDataManage extends SQLiteOpenHelper{
 		ContentValues cv = new ContentValues();
 		cv.put("plan_id", planId);
 		cv.put("plan_name", planName);
-		cv.put("start_date", utils.getDateTime(startDate));
-		cv.put("end_date", utils.getDateTime(endDate));
+		cv.put("start_date", util.getDateTime(startDate));
+		cv.put("end_date", util.getDateTime(endDate));
 		long k = SQ.insert(PLAN_TABLE, null, cv);
 		Log.d("Database operations", "One plan inserted");			
 	}

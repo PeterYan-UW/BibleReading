@@ -25,20 +25,40 @@
         </activity>
         <activity
             android:name=".CalenderActivity"
-            android:label="@string/title_activity_calender" >
-        </activity>
+            android:label="@string/title_activity_calender" />
         <activity
             android:name=".DailyMission"
-            android:label="@string/title_activity_dailymission" >
-        </activity>
-
-        <receiver android:name=".TimeAlarm" />
-
+            android:label="@string/title_activity_dailymission" />
         <activity
             android:name="com.afc.biblereading.user.LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
-        </activity>
+            android:windowSoftInputMode="adjustResize|stateVisible" />
+        <activity
+            android:name="com.afc.biblereading.user.UsersListActivity"
+            android:label="@string/sign_up"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.afc.biblereading.user.SignUpUserActivity"
+            android:label="@string/sign_up"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.afc.biblereading.user.SignInActivity"
+            android:label="@string/sign_in"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.afc.biblereading.user.ShowUserActivity"
+            android:label="@string/show_user"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.afc.biblereading.user.UpdateUserActivity"
+            android:label="@string/update_user"
+            android:screenOrientation="portrait" />
+        
+
+        <receiver android:name=".TimeAlarm" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -1,4 +1,4 @@
-package com.afc.biblereading.user.helper;
+package com.afc.biblereading.helper;
 
 import java.util.ArrayList;
 import java.util.List;

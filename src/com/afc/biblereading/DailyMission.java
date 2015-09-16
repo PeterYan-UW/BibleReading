@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.afc.biblereading.adapter.CustomCheckboxAdapter;
+import com.afc.biblereading.helper.util;
+
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -18,7 +21,7 @@ public class DailyMission extends Activity {
 		setContentView(R.layout.activity_dailymission);
 		Typeface face0 = Typeface.createFromAsset(getAssets(),"fonts/fonts1.TTF");
 		TextView dailyTitle = (TextView) findViewById(R.id.dailyTitle);
-		dailyTitle.setText(utils.printDate(CalenderActivity.targetDay)+"¶Á¾­");
+		dailyTitle.setText(util.printDate(CalenderActivity.targetDay)+"¶Á¾­");
 		dailyTitle.setTypeface(face0);
 		populateListView();
 	}
@@ -26,7 +29,7 @@ public class DailyMission extends Activity {
 	private void populateListView() {		
 		LocalDataManage DOP = ((ApplicationSingleton)getApplication()).getDataBase();
 		ArrayList<HashMap<String, Object>> plans = DOP.getPlanInfo(DOP);
-		Date startDay = utils.formatDateTime(this, (String) plans.get(0).get("start_day"));
+		Date startDay = util.formatDateTime(this, (String) plans.get(0).get("start_day"));
 		ArrayList<HashMap<String, Object>> SpecificDayTask = DOP.getDailyTask(DOP, 0, CalenderActivity.targetDay,startDay);
 		
 		ArrayList<Task> taskList = new ArrayList<Task>();

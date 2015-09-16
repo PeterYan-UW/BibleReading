@@ -1,4 +1,4 @@
-package com.afc.biblereading;
+package com.afc.biblereading.helper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import org.joda.time.Days;
 import android.content.Context;
 import android.net.ParseException;
 
-public class utils {
+public class util {
 	public static String getDateTime(DateTime date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss", Locale.getDefault());

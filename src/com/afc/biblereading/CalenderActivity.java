@@ -11,6 +11,9 @@ import junit.framework.Protectable;
 import org.joda.time.DateTime;
 
 import com.afc.biblereading.R;
+import com.afc.biblereading.adapter.CustomCheckboxAdapter;
+import com.afc.biblereading.helper.util;
+import com.afc.biblereading.user.LoginActivity;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -127,8 +130,8 @@ public class CalenderActivity extends FragmentActivity{
 		
 		plan_id = (Integer) plans.get(0).get("plan_id");
 		Log.v((String) plans.get(0).get("start_day"),"chapternum");
-		startDay = utils.formatDateTime(this, (String) plans.get(0).get("start_day"));
-		endDay = utils.formatDateTime(this, (String) plans.get(0).get("end_day"));
+		startDay = util.formatDateTime(this, (String) plans.get(0).get("start_day"));
+		endDay = util.formatDateTime(this, (String) plans.get(0).get("end_day"));
 		ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
 		
 		Log.d("today task return", todayTask.toString());
@@ -175,7 +178,7 @@ public class CalenderActivity extends FragmentActivity{
 	
 	private void refreshCalender(){
 		ArrayList<Integer> Faildays = DOP.getUnfinishedToday(DOP, 0, startDay);
-		HashMap<Date, Integer> backgroundForDateMap = utils.initCalenderDates(
+		HashMap<Date, Integer> backgroundForDateMap = util.initCalenderDates(
 				new DateTime(endDay), new DateTime(startDay), Faildays, 
 				R.color.failed, R.color.passed, R.color.future);
 		caldroidFragment.setBackgroundResourceForDates(backgroundForDateMap);
@@ -254,6 +257,9 @@ public class CalenderActivity extends FragmentActivity{
         case R.id.reset:
         	ResetDays();
             return true;
+        case R.id.user:
+        	Intent user = new Intent(this, LoginActivity.class);
+        	startActivity(user);  
         default:
             return super.onOptionsItemSelected(item);
         }
