@@ -9,12 +9,13 @@
         android:targetSdkVersion="21" />
 
     <application
+        android:name=".ApplicationSingleton"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
         <activity
-            android:name="com.afc.biblereading.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,17 +24,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.afc.biblereading.CalenderActivity"
+            android:name=".CalenderActivity"
             android:label="@string/title_activity_calender" >
         </activity>
         <activity
             android:name=".DailyMission"
             android:label="@string/title_activity_dailymission" >
         </activity>
-        <receiver android:name="com.afc.biblereading.TimeAlarm" />
 
+        <receiver android:name=".TimeAlarm" />
+
+        <activity
+            android:name="com.afc.biblereading.user.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
     </application>
-    
-	<uses-permission android:name="android.permission.INTERNET" /> 
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
 </manifest>
