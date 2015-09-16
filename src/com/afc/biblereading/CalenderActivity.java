@@ -6,6 +6,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import junit.framework.Protectable;
+
+import org.joda.time.DateTime;
+
 import com.afc.biblereading.R;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
@@ -15,19 +19,17 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,45 +38,24 @@ import android.widget.Toast;
 @SuppressLint("SimpleDateFormat")
 public class CalenderActivity extends FragmentActivity{
 	private boolean undo = false;
+	LocalDataManage DOP;
+	private Date startDay = null;
+	private Date endDay = null;
 	private CaldroidFragment caldroidFragment;
 	private CaldroidFragment dialogCaldroidFragment;
 	private int index;
-
-	private void setCustomResourceForDates() {
-		Calendar cal = Calendar.getInstance();
-
-		// Min date is last 7 days
-		cal.add(Calendar.DATE, -18);
-		Date blueDate = cal.getTime();
-
-		// Max date is next 7 days
-		cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, 16);
-		Date greenDate = cal.getTime();
-
-		if (caldroidFragment != null) {
-			caldroidFragment.setBackgroundResourceForDate(R.color.blue,
-					blueDate);
-			caldroidFragment.setBackgroundResourceForDate(R.color.green,
-					greenDate);
-			caldroidFragment.setTextColorForDate(R.color.white, blueDate);
-			caldroidFragment.setTextColorForDate(R.color.white, greenDate);
-		}
-	}
+	public static Date targetDay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_calender);
-
-		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
-
+		setTodayTask();
+		
 		// Setup caldroid fragment
-		// **** If you want normal CaldroidFragment, use below line ****
+		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
 		caldroidFragment = new CaldroidFragment();
-
-		// Setup arguments
-
+		refreshCalender();		
 		// If Activity is created after rotation
 		if (savedInstanceState != null) {
 			caldroidFragment.restoreStatesFromKey(savedInstanceState,
@@ -88,14 +69,8 @@ public class CalenderActivity extends FragmentActivity{
 			args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
 			args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
 			args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
-
-			// Uncomment this to customize startDayOfWeek
-			// args.putInt(CaldroidFragment.START_DAY_OF_WEEK,
-			// CaldroidFragment.TUESDAY); // Tuesday
 			caldroidFragment.setArguments(args);
 		}
-
-		setCustomResourceForDates();
 
 		// Attach to the activity
 		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -104,36 +79,13 @@ public class CalenderActivity extends FragmentActivity{
 		
 		final Intent intent = new Intent(this, DailyMission.class);
 		
-		int plan_id = -1;
-		Date startDay = null;
-		LocalDataManage DOP = new LocalDataManage(this);
-		ArrayList<HashMap<String, Object>> plans = DOP.getPlanInfo(DOP);
-		if (plans.size()==1){
-			plan_id = Integer.parseInt((String) plans.get(0).get("plan_id"));
-			startDay = utils.formatDateTime(this, (String) plans.get(0).get("start_day"));
-			ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
-//			Log.d("database task return", String.valueOf(taskResult.size()));
-			Log.d("today task return", todayTask.toString());
-		}
-		
 		// Setup listener
 		final CaldroidListener listener = new CaldroidListener() {
-
+			
 			@Override
 			public void onSelectDate(Date date, View view) {
-				Toast.makeText(getApplicationContext(), formatter.format(date),
-						Toast.LENGTH_SHORT).show();
-				
-				
-		    	
+				targetDay = date;	
 		    	startActivity(intent);
-			}
-
-			@Override
-			public void onChangeMonth(int month, int year) {
-				String text = "month: " + month + " year: " + year;
-				Toast.makeText(getApplicationContext(), text,
-						Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -157,47 +109,77 @@ public class CalenderActivity extends FragmentActivity{
 		// Setup Caldroid
 		caldroidFragment.setCaldroidListener(listener);
 
+		// Get Today's Task
 		createScheduledNotification();
 		
+	}
+	
+	private void setTodayTask() {
+		// Setup today's task title		
 		Typeface face0 = Typeface.createFromAsset(getAssets(),"fonts/fonts1.TTF");
         TextView TodayMissionTitle = (TextView) findViewById(R.id.TodayMissionTitle);
         TodayMissionTitle.setTypeface(face0);
+
+		// Setup today's task list
+        int plan_id = -1;
+		DOP = ((ApplicationSingleton)getApplication()).getDataBase();
+		final ArrayList<HashMap<String, Object>> plans = DOP.getPlanInfo(DOP);
+		
+		plan_id = (Integer) plans.get(0).get("plan_id");
+		Log.v((String) plans.get(0).get("start_day"),"chapternum");
+		startDay = utils.formatDateTime(this, (String) plans.get(0).get("start_day"));
+		endDay = utils.formatDateTime(this, (String) plans.get(0).get("end_day"));
+		ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
+		
+		Log.d("today task return", todayTask.toString());
+		int BooksNumToday = todayTask.size();
 		
         ListView TodayMission = (ListView) findViewById(R.id.TodayMission);
-        TodayMission.setBackgroundColor(Color.WHITE);
         
-		final String[] s = {"b","a","c","d","a","c","d","a","c","d","a","c","d","a","c","d","a","c","d","a","c","d"};
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-				this,
-				R.layout.single_item,
-				s);
+        ArrayList<Task> taskList = new ArrayList<Task>();
+		for (int i=0;i<BooksNumToday;i++) {
+			int id = (Integer) todayTask.get(i).get("id");
+			int book = (Integer) todayTask.get(i).get("book");
+			int start_chapter = (Integer) todayTask.get(i).get("start_chapter");
+			int end_chapter = (Integer) todayTask.get(i).get("end_chapter");
+			Boolean done = (Integer) todayTask.get(i).get("status") == 1;			
+			Task task = new Task(id, book, start_chapter, end_chapter, done);
+			taskList.add(task);
+		}
+		CustomCheckboxAdapter dataAdapter = new CustomCheckboxAdapter(
+				this, R.layout.single_item, taskList);
 		
 		Log.v(Integer.toString(TodayMission.getCount()),"view");
-		TodayMission.setAdapter(adapter);
-		TodayMission.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		TodayMission.setAdapter(dataAdapter);
 		TodayMission.setOnItemClickListener(new OnItemClickListener() {
 			  
 			  @Override
 			  public void onItemClick(AdapterView<?> parent, View view,
 			    int position, long id) {
 				  	index = position;
-				  	String name = s[position];
-				  	View v = (View) parent.getChildAt(index);
-				  	((TextView) view).setText("hello");
-				  	s[position] = "hello";
-//				  	if (view.getContext().toString().equals(name)) {
-//				  		Log.v("yes","test");
-//				  	}
-//				  	else {
-//				  		Log.v("no","test");
-//				  	}
-//				  	ListView LV = (ListView) findViewById(R.id.TodayMission);
-//				  	View v = (View) LV.getChildAt(position);
-//				  	
-//					v.setBackgroundColor(Color.GREEN);
+				  	Task task = (Task) parent.getItemAtPosition(position);
+				  	
+				  	Toast.makeText(getApplicationContext(),
+				  			"Clicked on Row: " + task.asString(),
+				  			Toast.LENGTH_LONG).show();
 			  }
 		});
 		
+	}
+
+	@Override
+	protected void onResume(){
+		super.onResume();
+		refreshCalender();
+	}
+	
+	private void refreshCalender(){
+		ArrayList<Integer> Faildays = DOP.getUnfinishedToday(DOP, 0, startDay);
+		HashMap<Date, Integer> backgroundForDateMap = utils.initCalenderDates(
+				new DateTime(endDay), new DateTime(startDay), Faildays, 
+				R.color.failed, R.color.passed, R.color.future);
+		caldroidFragment.setBackgroundResourceForDates(backgroundForDateMap);
+		caldroidFragment.refreshView();
 	}
 
 	/**
@@ -217,18 +199,6 @@ public class CalenderActivity extends FragmentActivity{
 					"DIALOG_CALDROID_SAVED_STATE");
 		}
 	}
-	
-	public void ResetDays(View view){
-    	Intent intent = new Intent(this, MainActivity.class);
-    	SharedPreferences settings = getSharedPreferences(MainActivity.PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("Set?", "No");
-        editor.commit();
-        LocalDataManage DOP = new LocalDataManage(this);
-		DOP.DeletePlan(DOP);
-    	startActivity(intent);
-    	
-    }
 	
 	private void createScheduledNotification() {
 	
@@ -263,4 +233,51 @@ public class CalenderActivity extends FragmentActivity{
 		//alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60, pendingIntent);
 	}
 	
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.calender, menu);
+        return true;
+    }
+    
+
+	public void ResetDays(){
+		Intent backMain = new Intent(this, MainActivity.class);
+		LocalDataManage DOP = ((ApplicationSingleton)getApplication()).getDataBase();
+		DOP.DeletePlan(DOP);
+    	startActivity(backMain);    	
+    }
+	
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+        case R.id.reset:
+        	ResetDays();
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
+    	
+	private Boolean exit = false;
+	@Override
+    public void onBackPressed() {
+        if (exit) {
+        	Intent intent = new Intent(Intent.ACTION_MAIN);
+        	intent.addCategory(Intent.CATEGORY_HOME);
+        	intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        	startActivity(intent);
+        } else {
+            Toast.makeText(this, "Press Back again to Exit.",
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
+        }
+
+    }
 }

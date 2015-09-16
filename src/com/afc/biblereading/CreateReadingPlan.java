@@ -17,11 +17,10 @@ public class CreateReadingPlan {
 	private final static int TOTAL_CHAPTERS = 1189;
 
 	private final static BibleIndex Bibleindex = new BibleIndex();
-	public static void CreatePlan(String planName, DateTime startDate,
+	public static void CreatePlan(LocalDataManage DOP, String planName, DateTime startDate,
 			DateTime endDate, MainActivity context) {
 		//TODO: need to gen uniqu plan id
 		int planId = 0;
-		LocalDataManage DOP = new LocalDataManage(context);
 		DOP.AddPlan(DOP, 0, planName, startDate, endDate);
         int totalReadingDays = 
         		Days.daysBetween(startDate, endDate).getDays()+1;

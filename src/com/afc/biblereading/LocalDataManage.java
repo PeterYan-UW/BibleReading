@@ -58,7 +58,7 @@ public class LocalDataManage extends SQLiteOpenHelper{
 		if (cursor.moveToFirst()) { 
 			do { 
 				HashMap<String, Object> map = new HashMap<String, Object>(); 
-				map.put("plan_id", cursor.getString(0));
+				map.put("plan_id", cursor.getInt(0));
 				map.put("plan_name", cursor.getString(1));
 				map.put("start_day", cursor.getString(2));  
 				map.put("end_day", cursor.getString(3));  
@@ -68,6 +68,23 @@ public class LocalDataManage extends SQLiteOpenHelper{
 		return planList;
 	}
 	
+	public ArrayList<Integer> getUnfinishedToday(LocalDataManage ldm, int planId, Date startDay){
+		ArrayList<Integer> taskList; 
+		taskList = new ArrayList<Integer>();
+		int day = Days.daysBetween(new DateTime(startDay),new DateTime(new Date())).getDays()+1;
+		String selectQuery = "SELECT day FROM " + DAILY_TASK_TABLE
+				+ " WHERE plan_id = " + planId + " AND status = 0;";
+		SQLiteDatabase SQ = ldm.getReadableDatabase();
+		Cursor cursor = SQ.rawQuery(selectQuery, null); 
+		if (cursor.moveToFirst()) { 
+			do {
+				taskList.add(cursor.getInt(0)); 
+			} while (cursor.moveToNext()); 
+		} // return contact list return wordList;
+		Log.v("tasks: ", taskList.toString());
+		return taskList;
+	}
+	
 	public ArrayList<HashMap<String, Object>> getTodayTask(LocalDataManage ldm, int planId, Date startDay){
 		return getDailyTask(ldm, planId, new Date(), startDay);
 	}
@@ -75,46 +92,26 @@ public class LocalDataManage extends SQLiteOpenHelper{
 	public ArrayList<HashMap<String, Object>> getDailyTask(LocalDataManage ldm, int planId, Date targetDay, Date startDay){
 		ArrayList<HashMap<String, Object>> taskList; 
 		taskList = new ArrayList<HashMap<String, Object>>();
-		int day = Days.daysBetween(new DateTime(targetDay), 
-        				new DateTime(startDay)).getDays()+1;
-		String selectQuery = "SELECT book, start_chapter, end_chapter, status FROM "
+		int day = Days.daysBetween(new DateTime(startDay),new DateTime(targetDay)).getDays()+1;
+		String selectQuery = "SELECT rowid, book, start_chapter, end_chapter, status FROM "
 								+ DAILY_TASK_TABLE
-								+ " WHERE plan_id = " + planId + " AND day = " + day +";";
+								+ " WHERE plan_id = " + planId + " AND day = " + day + " ORDER BY book;";
 
 		Log.v("db today task query", selectQuery);
 		SQLiteDatabase SQ = ldm.getReadableDatabase();
 		Cursor cursor = SQ.rawQuery(selectQuery, null); 
 		if (cursor.moveToFirst()) { 
 			do { 
-				HashMap<String, Object> map = new HashMap<String, Object>();  
-				map.put("book", cursor.getString(0));  
-				map.put("start_chapter", cursor.getString(1));  
-				map.put("end_chapter", cursor.getString(2));  
-				map.put("status", cursor.getString(3));  
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("id", cursor.getInt(0));
+				map.put("book", cursor.getInt(1));  
+				map.put("start_chapter", cursor.getInt(2));  
+				map.put("end_chapter", cursor.getInt(3));  
+				map.put("status", cursor.getInt(4));  
 				taskList.add(map); 
 			} while (cursor.moveToNext()); 
 		} // return contact list return wordList;
-		return taskList;
-	}
-	
-	public ArrayList<HashMap<String, Object>> getTaskInfo(LocalDataManage ldm){
-		ArrayList<HashMap<String, Object>> taskList; 
-		taskList = new ArrayList<HashMap<String, Object>>(); 
-		String selectQuery = "SELECT rowid, day, plan_id, book, start_chapter, end_chapter, status FROM "+DAILY_TASK_TABLE; 
-		SQLiteDatabase SQ = ldm.getReadableDatabase();
-		Cursor cursor = SQ.rawQuery(selectQuery, null); 
-		if (cursor.moveToFirst()) { 
-			do { 
-				HashMap<String, Object> map = new HashMap<String, Object>(); 
-				map.put("uniq_id", cursor.getString(0));
-				map.put("day", cursor.getString(1));
-				map.put("plan_id", cursor.getString(2));  
-				map.put("book", cursor.getString(3));  
-				map.put("start_chapter", cursor.getString(4));  
-				map.put("end_chapter", cursor.getString(5));  
-				taskList.add(map); 
-			} while (cursor.moveToNext()); 
-		} // return contact list return wordList;
+		Log.v("tasks: ", taskList.toString());
 		return taskList;
 	}
 
@@ -141,6 +138,18 @@ public class LocalDataManage extends SQLiteOpenHelper{
 		cv.put("status", 0);
 		long k = SQ.insert(DAILY_TASK_TABLE, null, cv);
 		Log.d("Database operations", "One day task inserted");				
+	}
+	
+	public void SetTaskStatus(LocalDataManage ldm, Task task){
+		int newStatus = 0;
+		if (task.getDone()){
+			newStatus = 1;
+		}
+		SQLiteDatabase SQ  = ldm.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("status", newStatus);
+		SQ.update(DAILY_TASK_TABLE, values, "rowid="+String.valueOf(task.getID()), null);
+		
 	}
 	
 	public void DeletePlan(LocalDataManage ldm){
