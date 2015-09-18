@@ -15,8 +15,10 @@ import java.util.List;
 
 public class SignUpUserActivity extends BaseActivity {
 
-    private EditText loginEditText;
+    private EditText emailEditText;
     private EditText passwordEditText;
+    private EditText firstNameEditText;
+    private EditText lastNameEditText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,8 +28,10 @@ public class SignUpUserActivity extends BaseActivity {
     }
 
     private void initUI() {
-        loginEditText = (EditText) findViewById(R.id.login_edittext);
+        emailEditText = (EditText) findViewById(R.id.email_edittext);
         passwordEditText = (EditText) findViewById(R.id.password_edittext);
+        firstNameEditText = (EditText) findViewById(R.id.first_name_edittext);
+        lastNameEditText = (EditText) findViewById(R.id.last_name_edittext);
     }
 
     public void onClick(View view) {
@@ -38,8 +42,12 @@ public class SignUpUserActivity extends BaseActivity {
                 // Sign Up user
                 //
                 QBUser qbUser = new QBUser();
-                qbUser.setLogin(loginEditText.getText().toString());
+                qbUser.setEmail(emailEditText.getText().toString());
                 qbUser.setPassword(passwordEditText.getText().toString());
+                String FullName = 
+                		firstNameEditText.getText().toString()
+                		+" "+lastNameEditText.getText().toString();
+                qbUser.setFullName(FullName);
                 QBUsers.signUpSignInTask(qbUser, new QBEntityCallbackImpl<QBUser>() {
                     @Override
                     public void onSuccess(QBUser qbUser, Bundle bundle) {

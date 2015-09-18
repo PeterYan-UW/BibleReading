@@ -9,7 +9,6 @@ import static com.afc.biblereading.user.definitions.Consts.POSITION;
 
 public class ShowUserActivity extends BaseActivity {
 
-    private TextView loginTextView;
     private TextView emailTextView;
     private TextView fullNameTextView;
     private TextView phoneTextView;
@@ -27,7 +26,6 @@ public class ShowUserActivity extends BaseActivity {
     }
 
     private void initUI() {
-        loginTextView = (TextView) findViewById(R.id.login_textview);
         emailTextView = (TextView) findViewById(R.id.email_textview);
         fullNameTextView = (TextView) findViewById(R.id.full_name_textview);
         phoneTextView = (TextView) findViewById(R.id.phone_textview);
@@ -37,7 +35,6 @@ public class ShowUserActivity extends BaseActivity {
 
     private void fillAllFields() {
         position = getIntent().getIntExtra(POSITION, 0);
-        fillField(loginTextView, DataHolder.getDataHolder().getQBUser(position).getLogin());
         fillField(emailTextView, DataHolder.getDataHolder().getQBUser(position).getEmail());
         fillField(fullNameTextView, DataHolder.getDataHolder().getQBUser(position).getFullName());
         fillField(phoneTextView, DataHolder.getDataHolder().getQBUser(position).getPhone());

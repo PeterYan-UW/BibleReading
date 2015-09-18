@@ -6,33 +6,51 @@
     android:paddingRight="@dimen/padding_middle">
 
     <EditText
-        android:id="@+id/login_edittext"
+        android:id="@+id/email_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/password_edittext"
         android:layout_centerHorizontal="true"
-        android:capitalize="none"
-        android:hint="@string/login"
+        android:hint="@string/email"
         android:paddingBottom="@dimen/padding_middle"
-        android:singleLine="true" />
-
+        android:singleLine="true" 
+        android:inputType="textEmailAddress"/>
+    
     <EditText
         android:id="@+id/password_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:capitalize="none"
         android:hint="@string/password"
         android:imeOptions="actionSend"
-        android:password="true"
+        android:singleLine="true"
+        android:inputType="textPassword" />
+    
+    <EditText
+        android:id="@+id/first_name_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/password_edittext"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/fisrt_name"
+        android:paddingBottom="@dimen/padding_middle"
         android:singleLine="true" />
-
+    
+    <EditText
+        android:id="@+id/last_name_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/first_name_edittext"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/last_name"
+        android:paddingBottom="@dimen/padding_middle"
+        android:singleLine="true" />
     <Button
         android:id="@+id/sign_up_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/password_edittext"
+        android:layout_below="@+id/last_name_edittext"
         android:layout_centerHorizontal="true"
         android:onClick="onClick"
         android:text="@string/sign_up" />

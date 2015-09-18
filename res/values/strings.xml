@@ -9,5 +9,6 @@
     <string name="please_login">Login to get more feature</string>
     <string name="title_activity_group_list">GroupListActivity</string>
     <string name="title_activity_show_group">ShowGroupActivity</string>
+    <string name="title_activity_user_group">UserGroupActivity</string>
 
 </resources>

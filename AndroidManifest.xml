@@ -67,6 +67,10 @@
             android:name=".ShowGroupActivity"
             android:label="@string/title_activity_show_group" >
         </activity>
+        <activity
+            android:name="com.afc.biblereading.group.UserGroupActivity"
+            android:label="@string/title_activity_user_group" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
