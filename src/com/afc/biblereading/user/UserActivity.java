@@ -2,6 +2,7 @@ package com.afc.biblereading.user;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -10,19 +11,29 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.afc.biblereading.R;
+import com.afc.biblereading.adapter.GroupListAdapter;
 import com.afc.biblereading.adapter.UserListAdapter;
+import com.afc.biblereading.group.Group;
+import com.afc.biblereading.group.GroupListActivity;
 import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.DialogUtils;
+import com.afc.biblereading.helper.util;
+import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.QBEntityCallbackImpl;
+import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.QBUsers;
+import com.quickblox.customobjects.QBCustomObjects;
+import com.quickblox.customobjects.model.QBCustomObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.afc.biblereading.user.definitions.Consts.POSITION;
 
-public class UsersListActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class UserActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
-//    private UserListAdapter usersListAdapter;
+    private GroupListAdapter groupsListAdapter;
 //    private ListView usersList;
     private ScrollView userInfo;
     private TextView askLogin;
@@ -33,6 +44,7 @@ public class UsersListActivity extends BaseActivity implements AdapterView.OnIte
     private Button signInButton;
     private Button selfEditButton;
     private Button singUpButton;
+    private Button groupButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +64,7 @@ public class UsersListActivity extends BaseActivity implements AdapterView.OnIte
         signInButton = (Button) findViewById(R.id.sign_in_button);
         selfEditButton = (Button) findViewById(R.id.self_edit_button);
         singUpButton = (Button) findViewById(R.id.sign_up_button);
+        groupButton = (Button) findViewById(R.id.group_button);
 //        usersList = (ListView) findViewById(R.id.users_listview);
     }
 
@@ -76,6 +89,7 @@ public class UsersListActivity extends BaseActivity implements AdapterView.OnIte
             userInfo.setVisibility(View.VISIBLE);
             logOutButton.setVisibility(View.VISIBLE);
             selfEditButton.setVisibility(View.VISIBLE);
+            groupButton.setVisibility(View.VISIBLE);
         }
 //        usersListAdapter.notifyDataSetChanged();
     }
@@ -84,6 +98,7 @@ public class UsersListActivity extends BaseActivity implements AdapterView.OnIte
     public void onDestroy() {
         super.onDestroy();
         // destroy session after app close
+        Log.v("user Activity", "destroied");
         DataHolder.getDataHolder().setSignInQbUser(null);
     }
 
@@ -93,6 +108,7 @@ public class UsersListActivity extends BaseActivity implements AdapterView.OnIte
             signInButton.setVisibility(View.GONE);
             askLogin.setVisibility(View.GONE);
             logOutButton.setVisibility(View.VISIBLE);
+            groupButton.setVisibility(View.VISIBLE);
             fillAllFields();
         }
     }
@@ -135,9 +151,39 @@ public class UsersListActivity extends BaseActivity implements AdapterView.OnIte
                 intent = new Intent(this, UpdateUserActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.group_button:
+            	getAllgroup();
+            	break;
         }
     }
-
+    
+    private void getAllgroup() {
+    	QBRequestGetBuilder groupRequestBuilder = new QBRequestGetBuilder();
+    	QBCustomObjects.getObjects("group", groupRequestBuilder, new QBEntityCallbackImpl<ArrayList<QBCustomObject>>() {
+			
+			@Override
+			public void onSuccess(ArrayList<QBCustomObject> groups, Bundle bundle) {
+				List<Group> groupList = new ArrayList<Group>();
+				for (int i=0; i<groups.size(); i++){
+					Group g = util.QBGroup2Group(groups.get(i));
+					groupList.add(g);
+				}
+    			DataHolder.getDataHolder().setGroupList(groupList);
+    			startGetAllGroupsActivity();				
+			}
+			
+			@Override
+			public void onError(List<String> errors) {
+				DialogUtils.showLong(context, errors.get(0));				
+			}
+		});
+    }
+    
+    private void startGetAllGroupsActivity() {
+    	Intent intent = new Intent(this, GroupListActivity.class);
+    	startActivity(intent);
+    }
+    
     private void updateDataAfterLogOut() {
         DataHolder.getDataHolder().setSignInQbUser(null);
         signInButton.setVisibility(View.VISIBLE);
@@ -146,6 +192,7 @@ public class UsersListActivity extends BaseActivity implements AdapterView.OnIte
         logOutButton.setVisibility(View.GONE);
         selfEditButton.setVisibility(View.GONE);
         singUpButton.setVisibility(View.VISIBLE);
+        groupButton.setVisibility(View.GONE);
     }
 
     @Override

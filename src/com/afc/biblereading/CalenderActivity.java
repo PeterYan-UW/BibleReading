@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
 import com.afc.biblereading.R;
 import com.afc.biblereading.adapter.CustomCheckboxAdapter;
 import com.afc.biblereading.helper.util;
-import com.afc.biblereading.user.LoginActivity;
+import com.afc.biblereading.user.CreateSessionActivity;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -258,7 +258,7 @@ public class CalenderActivity extends FragmentActivity{
         	ResetDays();
             return true;
         case R.id.user:
-        	Intent user = new Intent(this, LoginActivity.class);
+        	Intent user = new Intent(this, CreateSessionActivity.class);
         	startActivity(user);  
         default:
             return super.onOptionsItemSelected(item);

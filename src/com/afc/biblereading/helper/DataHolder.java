@@ -3,13 +3,20 @@ package com.afc.biblereading.helper;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
+import com.afc.biblereading.group.Group;
+import com.quickblox.customobjects.model.QBCustomObject;
 import com.quickblox.users.model.QBUser;
+
 import static com.afc.biblereading.user.definitions.Consts.EMPTY_STRING;
 
 public class DataHolder {
     private static DataHolder dataHolder;
     private List<QBUser> qbUsersList = new ArrayList<QBUser>();
+    private List<Group> groupList = new ArrayList<Group>();
     private QBUser signInQbUser;
+    private Group signInQbUserGroup;
 
     public static synchronized DataHolder getDataHolder() {
         if (dataHolder == null) {
@@ -18,6 +25,22 @@ public class DataHolder {
         return dataHolder;
     }
 
+    public void setGroupList(List<Group> GroupList) {
+        this.groupList = GroupList;
+    }
+    public int getGroupListSize() {
+        return groupList.size();
+    }
+	public Group getGroup(int index) {
+		return groupList.get(index);
+	}
+	public String getGroupName(int index) {
+        return groupList.get(index).getName();
+	}
+	public int getGroupRate(int index) {
+		return groupList.get(index).getFinishRate();
+	}
+	
     public void setQbUsersList(List<QBUser> qbUsersList) {
         this.qbUsersList = qbUsersList;
     }
@@ -52,6 +75,14 @@ public class DataHolder {
 
     public void setSignInQbUser(QBUser singInQbUser) {
         this.signInQbUser = singInQbUser;
+    }   
+    
+    public Group getSignInQbUserGroup() {
+        return signInQbUserGroup;
+    } 
+    
+    public void setSignInQbUserGroup(Group group) {
+        this.signInQbUserGroup = group;
     }
 
     public String getSignInUserOldPassword() {
@@ -59,7 +90,7 @@ public class DataHolder {
     }
 
     public int getSignInUserId() {
-        return signInQbUser.getId();
+    	return signInQbUser.getId();
     }
 
     public void setSignInUserPassword(String singInUserPassword) {

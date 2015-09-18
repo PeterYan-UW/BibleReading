@@ -32,7 +32,7 @@ import static com.afc.biblereading.user.definitions.Consts.APP_ID;
 import static com.afc.biblereading.user.definitions.Consts.AUTH_KEY;
 import static com.afc.biblereading.user.definitions.Consts.AUTH_SECRET;
 
-public class LoginActivity extends Activity{
+public class CreateSessionActivity extends Activity{
 
     private Context context;
     private ProgressBar progressBar;
@@ -40,7 +40,7 @@ public class LoginActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.progress_bar);
         context = this;
 
         initUI();
@@ -55,7 +55,6 @@ public class LoginActivity extends Activity{
             @Override
             public void onSuccess(QBSession qbSession, Bundle bundle) {
             	startLogin();
-//                getAllUser();
             }
 
             @Override
@@ -94,7 +93,7 @@ public class LoginActivity extends Activity{
 //        finish();
 //    }
     private void startLogin(){
-      Intent intent = new Intent(this, UsersListActivity.class);
+      Intent intent = new Intent(this, UserActivity.class);
       startActivity(intent);
       finish();
     	

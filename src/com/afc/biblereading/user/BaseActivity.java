@@ -27,7 +27,15 @@ public class BaseActivity extends Activity {
         context = this;
         progressDialog = DialogUtils.getProgressDialog(this);
     }
+    
+    @Override
+    protected void onStop() {
+        super.onStop();
 
+        if(progressDialog!= null)
+        	progressDialog.dismiss();
+    }
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

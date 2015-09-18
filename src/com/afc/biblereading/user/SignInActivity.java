@@ -59,7 +59,7 @@ public class SignInActivity extends BaseActivity {
                         DialogUtils.showLong(context, errors.get(0));
                     }
                 });
-
+                progressDialog.hide();
                 break;
         }
     }

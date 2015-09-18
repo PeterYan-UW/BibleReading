@@ -57,7 +57,7 @@ public class UpdateUserActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.update_button:
-                progressDialog.show();
+//                progressDialog.show();
 
                 // Update user
                 //

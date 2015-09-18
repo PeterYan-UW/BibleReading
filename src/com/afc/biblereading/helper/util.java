@@ -10,6 +10,9 @@ import java.util.TimeZone;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import com.afc.biblereading.group.Group;
+import com.quickblox.customobjects.model.QBCustomObject;
+
 import android.content.Context;
 import android.net.ParseException;
 
@@ -69,5 +72,14 @@ public class util {
 			}
 		}
 		return eventDates;
+	}
+	
+	public static Group QBGroup2Group(QBCustomObject QBGroup){
+		HashMap<String, Object> fields = QBGroup.getFields();
+		String ID = (String) fields.get("id");
+		String name = (String) fields.get("group_name");
+		ArrayList<Integer> members = (ArrayList<Integer>) fields.get("members");
+		Group group = new Group(ID, name, members);
+		return group;
 	}
 }
