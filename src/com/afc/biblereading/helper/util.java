@@ -10,6 +10,7 @@ import java.util.TimeZone;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import com.afc.biblereading.Task;
 import com.afc.biblereading.group.Group;
 import com.quickblox.customobjects.model.QBCustomObject;
 
@@ -81,5 +82,38 @@ public class util {
 		ArrayList<Integer> members = (ArrayList<Integer>) fields.get("members");
 		Group group = new Group(ID, name, members);
 		return group;
+	}
+	
+	public static ArrayList<Task> DBTasks2Tasks(ArrayList<HashMap<String, Object>> tasks){
+		ArrayList<Task> todayTaskList = new ArrayList<Task>();
+		for (int i=0;i<tasks.size();i++) {
+			int id = (Integer) tasks.get(i).get("id");
+			int book = (Integer) tasks.get(i).get("book");
+			int start_chapter = (Integer) tasks.get(i).get("start_chapter");
+			int end_chapter = (Integer) tasks.get(i).get("end_chapter");
+			Boolean done = (Integer) tasks.get(i).get("status") == 1;			
+			Task task = new Task(id, book, start_chapter, end_chapter, done);
+			todayTaskList.add(task);
+		}
+		return todayTaskList;
+	}
+	
+	public static String GenCheckInMessage(int total, int miss, String finish){
+		String checkInString = util.printDate(new Date()) 
+    			+ " " + DataHolder.getDataHolder().getSignInUserFullName();
+		if (total == 0){
+    		checkInString += "今天休息"; 
+    	}
+    	else if (miss == 0){
+    		checkInString += "完成今天任务:\n"; 
+    		checkInString += finish;
+    	}
+    	else if (miss == total){
+    		checkInString += "今天偷懒一天";
+    	}
+    	else{
+    		checkInString += "只"+finish;
+    	}
+		return checkInString;
 	}
 }

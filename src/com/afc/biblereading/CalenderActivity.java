@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import junit.framework.Protectable;
 
@@ -12,16 +13,26 @@ import org.joda.time.DateTime;
 
 import com.afc.biblereading.R;
 import com.afc.biblereading.adapter.CustomCheckboxAdapter;
+import com.afc.biblereading.group.Group;
 import com.afc.biblereading.helper.DataHolder;
+import com.afc.biblereading.helper.DialogUtils;
 import com.afc.biblereading.helper.util;
 import com.afc.biblereading.user.CreateSessionActivity;
 import com.afc.biblereading.user.UserActivity;
+import com.quickblox.core.QBCallback;
+import com.quickblox.core.QBEntityCallbackImpl;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.result.Result;
+import com.quickblox.customobjects.QBCustomObjects;
+import com.quickblox.customobjects.model.QBCustomObject;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -35,6 +46,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +62,7 @@ public class CalenderActivity extends FragmentActivity{
 	private CaldroidFragment dialogCaldroidFragment;
 	private int index;
 	public static Date targetDay;
+	ArrayList<Task> todayTaskList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -137,22 +150,12 @@ public class CalenderActivity extends FragmentActivity{
 		ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
 		
 		Log.d("today task return", todayTask.toString());
-		int BooksNumToday = todayTask.size();
 		
         ListView TodayMission = (ListView) findViewById(R.id.TodayMission);
         
-        ArrayList<Task> taskList = new ArrayList<Task>();
-		for (int i=0;i<BooksNumToday;i++) {
-			int id = (Integer) todayTask.get(i).get("id");
-			int book = (Integer) todayTask.get(i).get("book");
-			int start_chapter = (Integer) todayTask.get(i).get("start_chapter");
-			int end_chapter = (Integer) todayTask.get(i).get("end_chapter");
-			Boolean done = (Integer) todayTask.get(i).get("status") == 1;			
-			Task task = new Task(id, book, start_chapter, end_chapter, done);
-			taskList.add(task);
-		}
+        todayTaskList = util.DBTasks2Tasks(todayTask);
 		CustomCheckboxAdapter dataAdapter = new CustomCheckboxAdapter(
-				this, R.layout.single_item, taskList);
+				this, R.layout.single_item, todayTaskList);
 		
 		Log.v(Integer.toString(TodayMission.getCount()),"view");
 		TodayMission.setAdapter(dataAdapter);
@@ -179,7 +182,7 @@ public class CalenderActivity extends FragmentActivity{
 	}
 	
 	private void refreshCalender(){
-		ArrayList<Integer> Faildays = DOP.getUnfinishedToday(DOP, 0, startDay);
+		ArrayList<Integer> Faildays = DOP.getUnfinishedDay(DOP, 0, startDay);
 		HashMap<Date, Integer> backgroundForDateMap = util.initCalenderDates(
 				new DateTime(endDay), new DateTime(startDay), Faildays, 
 				R.color.failed, R.color.passed, R.color.future);
@@ -297,4 +300,53 @@ public class CalenderActivity extends FragmentActivity{
         }
 
     }
+	public void onClick(View view){
+        switch (view.getId()) {
+	        case R.id.CheckInTodayTask:
+	        	if (DataHolder.getDataHolder().getSignInUserGroup() != null){
+		        	ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
+		        	ArrayList<Task> converTodayTask = util.DBTasks2Tasks(todayTask);
+		        	String finished = "读完";
+		        	int total = converTodayTask.size();
+		        	int miss = 0;
+		        	for (Task t : converTodayTask){
+		        		if (t.getDone()){
+		        			finished += t.asString()+" ";
+		        		}
+		        		else{
+		        			miss++;
+		        		}
+		        	}
+		        	final String checkInString = util.GenCheckInMessage(total, miss, finished);
+	
+		    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		    		builder.setTitle("发表一下信息到小组");
+		    		builder.setMessage(checkInString);
+		    		builder.setPositiveButton("发表", new DialogInterface.OnClickListener() {
+		    			@Override
+		    			public void onClick(DialogInterface dialogInterface, int i) {
+		    				checkInTodayTask(checkInString);
+		    			}
+		    		});
+		    		builder.setNegativeButton("取消",null);
+		    		builder.create().show();
+	        	}
+	    		break;
+        }
+	}
+	
+	private void checkInTodayTask(String message){
+		QBCustomObject task = new QBCustomObject();
+		task.putString("task", message);
+		task.setClassName("DailyRecords");
+		QBCustomObjects.createObject(task, new QBEntityCallbackImpl<QBCustomObject>() {
+    	    @Override
+    	    public void onSuccess(QBCustomObject createdObject, Bundle bundle) {
+    	    }
+    	 
+    	    @Override
+    	    public void onError(List<String> errors) {    	 
+    	    }
+    	});
+	}
 }
