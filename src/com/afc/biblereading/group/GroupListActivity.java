@@ -1,8 +1,8 @@
 package com.afc.biblereading.group;
 
 import com.afc.biblereading.R;
-import com.afc.biblereading.ShowGroupActivity;
 import com.afc.biblereading.adapter.GroupListAdapter;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,5 +44,6 @@ public class GroupListActivity extends Activity implements AdapterView.OnItemCli
         Intent intent = new Intent(this, ShowGroupActivity.class);
         intent.putExtra(POSITION, position);
         startActivity(intent);
+        finish();
     }
 }

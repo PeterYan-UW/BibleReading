@@ -12,8 +12,10 @@ import org.joda.time.DateTime;
 
 import com.afc.biblereading.R;
 import com.afc.biblereading.adapter.CustomCheckboxAdapter;
+import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.util;
 import com.afc.biblereading.user.CreateSessionActivity;
+import com.afc.biblereading.user.UserActivity;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -258,8 +260,14 @@ public class CalenderActivity extends FragmentActivity{
         	ResetDays();
             return true;
         case R.id.user:
-        	Intent user = new Intent(this, CreateSessionActivity.class);
-        	startActivity(user);  
+        	if (DataHolder.getDataHolder().getSignInQbUser() == null){
+        		Intent user = new Intent(this, CreateSessionActivity.class);
+        		startActivity(user);  
+        	}
+        	else{
+        		Intent user = new Intent(this, UserActivity.class);
+        		startActivity(user);          		
+        	}
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -269,6 +277,9 @@ public class CalenderActivity extends FragmentActivity{
 	@Override
     public void onBackPressed() {
         if (exit) {
+            DataHolder.getDataHolder().setSignInQbUser(null);
+            DataHolder.getDataHolder().setSignInUserGroup(null);
+            DataHolder.getDataHolder().setSignInUserQbGroup(null);
         	Intent intent = new Intent(Intent.ACTION_MAIN);
         	intent.addCategory(Intent.CATEGORY_HOME);
         	intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

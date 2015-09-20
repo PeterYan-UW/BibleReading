@@ -1,14 +1,10 @@
 package com.afc.biblereading.group;
 
-import static com.afc.biblereading.user.definitions.Consts.POSITION;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.afc.biblereading.R;
-import com.afc.biblereading.R.id;
-import com.afc.biblereading.R.layout;
-import com.afc.biblereading.adapter.GroupListAdapter;
 import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.DialogUtils;
 import com.afc.biblereading.helper.util;
@@ -18,19 +14,14 @@ import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.customobjects.QBCustomObjects;
 import com.quickblox.customobjects.model.QBCustomObject;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -59,7 +50,7 @@ public class UserGroupActivity extends BaseActivity {
     }
 
     private void initUserGroup() {
-    	Group userGroup = DataHolder.getDataHolder().getSignInQbUserGroup();
+    	Group userGroup = DataHolder.getDataHolder().getSignInUserGroup();
         if (userGroup != null) {
         	createGroupLayout.setVisibility(View.GONE);
         	userGroupLayout.setVisibility(View.VISIBLE);
@@ -87,9 +78,43 @@ public class UserGroupActivity extends BaseActivity {
             case R.id.create_group_button:
             	createGroup();
                 break;
+            case R.id.leave_group_button:
+            	leaveGroup();
+                break;
         }
     }
     
+	private void leaveGroup() {
+		QBCustomObject oldQBGroup = DataHolder.getDataHolder().getSignInUserQbGroup();
+	    ArrayList memberList = DataHolder.getDataHolder().getSignInUserGroup().getMembersList();
+	    Integer currentUserId = DataHolder.getDataHolder().getSignInUserId();
+	    Log.v("current user id", String.valueOf(currentUserId));
+	    Log.v("before leave group", memberList.toString());
+	    memberList.remove(String.valueOf(currentUserId));
+	    Log.v("leave group", memberList.toString());
+	    
+	    QBCustomObject qbGroup = new QBCustomObject();
+	    qbGroup.setClassName("group");
+	    HashMap<String, Object> fields = new HashMap<String, Object>();
+	    fields.put("members", memberList);
+	    qbGroup.setFields(fields);
+	    qbGroup.setCustomObjectId(oldQBGroup.getCustomObjectId());
+	    QBCustomObjects.updateObject(qbGroup, new QBEntityCallbackImpl<QBCustomObject>() {
+	        @Override
+	        public void onSuccess(QBCustomObject newQBGroup, Bundle params) {
+	        	Group group = util.QBGroup2Group(newQBGroup);
+	        	DataHolder.getDataHolder().setSignInUserGroup(null);	
+	        	DataHolder.getDataHolder().setSignInUserQbGroup(null);
+	        	finish();
+	        }
+	     
+	        @Override
+	        public void onError(List<String> errors) {
+				DialogUtils.showLong(context, errors.get(0));			     
+	        }
+	    });
+		
+	}
 	private void createGroup(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Create New Bible Reading Group");
@@ -113,7 +138,8 @@ public class UserGroupActivity extends BaseActivity {
 		    	    @Override
 		    	    public void onSuccess(QBCustomObject createdObject, Bundle bundle) {
 		    	    	Group g = util.QBGroup2Group(createdObject);
-		    	    	DataHolder.getDataHolder().setSignInQbUserGroup(g);
+		    	    	DataHolder.getDataHolder().setSignInUserGroup(g);
+		    	    	DataHolder.getDataHolder().setSignInUserQbGroup(createdObject);
 		    	    }
 		    	 
 		    	    @Override
@@ -138,6 +164,7 @@ public class UserGroupActivity extends BaseActivity {
 					groupList.add(g);
 				}
     			DataHolder.getDataHolder().setGroupList(groupList);
+    			DataHolder.getDataHolder().setQBGroupList(groups);
     			startGetAllGroupsActivity();				
 			}
 			

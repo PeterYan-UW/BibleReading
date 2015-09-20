@@ -64,7 +64,7 @@
             android:label="@string/title_activity_group_list" >
         </activity>
         <activity
-            android:name=".ShowGroupActivity"
+            android:name="com.afc.biblereading.group.ShowGroupActivity"
             android:label="@string/title_activity_show_group" >
         </activity>
         <activity

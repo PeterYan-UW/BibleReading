@@ -10,18 +10,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.afc.biblereading.R;
-import com.afc.biblereading.group.Group;
 import com.afc.biblereading.group.UserGroupActivity;
 import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.DialogUtils;
-import com.afc.biblereading.helper.util;
 import com.quickblox.core.QBEntityCallbackImpl;
-import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.QBUsers;
-import com.quickblox.customobjects.QBCustomObjects;
-import com.quickblox.customobjects.model.QBCustomObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.afc.biblereading.user.definitions.Consts.POSITION;
@@ -43,7 +36,6 @@ public class UserActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
         initUI();
-//        initUsersList();
     }
 
     private void initUI() {
@@ -56,18 +48,12 @@ public class UserActivity extends BaseActivity implements AdapterView.OnItemClic
         selfEditButton = (Button) findViewById(R.id.self_edit_button);
         singUpButton = (Button) findViewById(R.id.sign_up_button);
         groupButton = (Button) findViewById(R.id.group_button);
-//        usersList = (ListView) findViewById(R.id.users_listview);
     }
 
     private void fillAllFields() {
         fillField(emailTextView, DataHolder.getDataHolder().getSignInUserEmail());
         fillField(fullNameTextView, DataHolder.getDataHolder().getSignInUserFullName());
     }
-//    private void initUsersList() {
-//        usersListAdapter = new UserListAdapter(this);
-//        usersList.setAdapter(usersListAdapter);
-//        usersList.setOnItemClickListener(this);
-//    }
 
     @Override
     public void onResume() {
@@ -82,16 +68,6 @@ public class UserActivity extends BaseActivity implements AdapterView.OnItemClic
             groupButton.setVisibility(View.VISIBLE);
             fillAllFields();
         }
-//        usersListAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        // destroy session after app close
-        Log.v("user Activity", "destroied");
-        DataHolder.getDataHolder().setSignInQbUser(null);
-        DataHolder.getDataHolder().setSignInQbUserGroup(null);
     }
 
     @Override
@@ -152,7 +128,8 @@ public class UserActivity extends BaseActivity implements AdapterView.OnItemClic
     
     private void updateDataAfterLogOut() {
         DataHolder.getDataHolder().setSignInQbUser(null);
-        DataHolder.getDataHolder().setSignInQbUserGroup(null);
+        DataHolder.getDataHolder().setSignInUserGroup(null);
+        DataHolder.getDataHolder().setSignInUserQbGroup(null);
         signInButton.setVisibility(View.VISIBLE);
         askLogin.setVisibility(View.VISIBLE);
         userInfo.setVisibility(View.GONE);

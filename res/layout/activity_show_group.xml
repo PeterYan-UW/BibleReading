@@ -3,7 +3,8 @@
     android:layout_height="match_parent"
     android:background="@color/background_color"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
 
     <ScrollView
         android:id="@+id/user_info_scrollview"
@@ -35,4 +36,12 @@
                 android:text="@string/three_dots" />
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/join_this_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Join this group"
+        android:onClick="onClick"/>
+
 </LinearLayout>

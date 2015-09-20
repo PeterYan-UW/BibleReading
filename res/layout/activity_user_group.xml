@@ -15,14 +15,16 @@
 		<LinearLayout
 	        android:id="@+id/user_group_layout"
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="match_parent"
 	        android:orientation="vertical"
-	        android:visibility="gone" >
+	        android:visibility="gone">
 	
 	        <LinearLayout
+                android:id="@+id/group_name_layout"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:orientation="horizontal">
+	            android:orientation="horizontal"
+	            android:layout_above="@+id/user_group_finished_rate">
 	
 	            <TextView
 	                android:id="@+id/group_name_title_textview"
@@ -41,13 +43,17 @@
 	        </LinearLayout>
 	
 	        <ProgressBar
-	                    android:id="@+id/user_group_finished_rate"
-	                    style="?android:attr/progressBarStyleHorizontal"
-	                    android:layout_width="match_parent"
-	                    android:layout_height="wrap_content"/>
+                android:id="@+id/user_group_finished_rate"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+        		android:layout_below="@+id/group_name_layout"/>
+	        
 	        <LinearLayout
+                android:id="@+id/rate_layout"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
+        		android:layout_below="@+id/user_group_finished_rate"
 	            android:orientation="horizontal">
 	
 	            <TextView
@@ -64,6 +70,14 @@
 	                android:ellipsize="end"
 	                android:singleLine="true" />
 	        </LinearLayout>
+
+	        <Button
+	            android:id="@+id/leave_group_button"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:onClick="onClick"
+	            android:text="@string/leave_group" />
+
 		</LinearLayout>
 
 		<LinearLayout
@@ -89,6 +103,4 @@
 
 		</LinearLayout>
 	</LinearLayout>
-	
-
 </RelativeLayout>

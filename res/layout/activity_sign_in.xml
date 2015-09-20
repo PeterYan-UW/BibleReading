@@ -6,14 +6,14 @@
     android:paddingRight="@dimen/padding_middle">
 
     <EditText
-        android:id="@+id/login_edittext"
+        android:id="@+id/email_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/password_edittext"
         android:layout_centerHorizontal="true"
-        android:capitalize="none"
-        android:hint="@string/login"
-        android:singleLine="true" />
+        android:hint="@string/email"
+        android:singleLine="true"
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/password_edittext"

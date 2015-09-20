@@ -14,9 +14,11 @@ import static com.afc.biblereading.user.definitions.Consts.EMPTY_STRING;
 public class DataHolder {
     private static DataHolder dataHolder;
     private List<QBUser> qbUsersList = new ArrayList<QBUser>();
+    private List<QBCustomObject> qbGroupList = new ArrayList<QBCustomObject>();
     private List<Group> groupList = new ArrayList<Group>();
     private QBUser signInQbUser;
-    private Group signInQbUserGroup;
+    private Group signInUserGroup;
+    private QBCustomObject signInUserQBGroup;
 
     public static synchronized DataHolder getDataHolder() {
         if (dataHolder == null) {
@@ -24,7 +26,13 @@ public class DataHolder {
         }
         return dataHolder;
     }
-
+    public void setQBGroupList(List<QBCustomObject> qbGroupList){
+    	Log.v("data Holder", "set group list");
+    	this.qbGroupList = qbGroupList;
+    }
+    public QBCustomObject getQBGroup(int index){
+    	return this.qbGroupList.get(index);
+    }
     public void setGroupList(List<Group> GroupList) {
         this.groupList = GroupList;
     }
@@ -77,12 +85,23 @@ public class DataHolder {
         this.signInQbUser = singInQbUser;
     }   
     
-    public Group getSignInQbUserGroup() {
-        return signInQbUserGroup;
+    public Group getSignInUserGroup() {
+        return signInUserGroup;
     } 
     
-    public void setSignInQbUserGroup(Group group) {
-        this.signInQbUserGroup = group;
+    public void setSignInUserGroup(Group group) {
+    	Log.v("data holder", "set user group");
+        this.signInUserGroup = group;
+    }
+    
+
+    public QBCustomObject getSignInUserQbGroup() {
+		return signInUserQBGroup;
+    } 
+    
+    public void setSignInUserQbGroup(QBCustomObject group) {
+    	Log.v("data holder", "set user group");
+        this.signInUserQBGroup = group;
     }
 
     public String getSignInUserOldPassword() {

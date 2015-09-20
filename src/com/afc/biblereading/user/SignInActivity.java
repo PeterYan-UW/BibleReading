@@ -21,7 +21,7 @@ import java.util.List;
 
 public class SignInActivity extends BaseActivity {
 
-    private EditText loginEditText;
+    private EditText emailEditText;
     private EditText passwordEditText;
 
     @Override
@@ -32,7 +32,7 @@ public class SignInActivity extends BaseActivity {
     }
 
     private void initUI() {
-        loginEditText = (EditText) findViewById(R.id.login_edittext);
+        emailEditText = (EditText) findViewById(R.id.email_edittext);
         passwordEditText = (EditText) findViewById(R.id.password_edittext);
     }
 
@@ -43,7 +43,7 @@ public class SignInActivity extends BaseActivity {
 
                 // Sign in application with user
                 //
-                QBUser qbUser = new QBUser(loginEditText.getText().toString(), passwordEditText.getText().toString());
+                QBUser qbUser = new QBUser(null, passwordEditText.getText().toString(),emailEditText.getText().toString());
                 QBUsers.signIn(qbUser, new QBEntityCallbackImpl<QBUser>() {
                     @Override
                     public void onSuccess(QBUser qbUser, Bundle bundle) {
@@ -74,7 +74,7 @@ public class SignInActivity extends BaseActivity {
 
     private void checkUserGroup(QBUser qbUser) {
     	QBRequestGetBuilder userGroupRequestBuilder = new QBRequestGetBuilder();
-    	userGroupRequestBuilder.ctn("members", qbUser.getId());
+    	userGroupRequestBuilder.in("members", qbUser.getId());
     	QBCustomObjects.getObjects("group", userGroupRequestBuilder, new QBEntityCallbackImpl<ArrayList<QBCustomObject>>(){
     		@Override
 			public void onSuccess(ArrayList<QBCustomObject> groups, Bundle bundle) {
@@ -82,7 +82,8 @@ public class SignInActivity extends BaseActivity {
     			// So the condition should be (groups.size() == 1)
     			if (groups.size() >= 1){
     				Group userGroup = util.QBGroup2Group(groups.get(0));
-    				DataHolder.getDataHolder().setSignInQbUserGroup(userGroup);
+    				DataHolder.getDataHolder().setSignInUserGroup(userGroup);
+    				DataHolder.getDataHolder().setSignInUserQbGroup(groups.get(0));
     			}	
 			}
 			
