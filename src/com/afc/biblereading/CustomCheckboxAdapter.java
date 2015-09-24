@@ -47,6 +47,8 @@ public class CustomCheckboxAdapter  extends ArrayAdapter<Task> {
 						Toast.makeText(getContext().getApplicationContext(), 
 								"Finish reading " + cb.getText(), 
 								Toast.LENGTH_LONG).show();
+						CalenderActivity.unfinish--;
+						Log.v(Integer.toString(CalenderActivity.unfinish),"unfinish");
 					}
 					task.setDone(getContext(), cb.isChecked());
 				}

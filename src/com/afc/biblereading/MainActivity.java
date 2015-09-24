@@ -1,6 +1,7 @@
 package com.afc.biblereading;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -9,6 +10,8 @@ import org.joda.time.DateTime;
 import com.afc.biblereading.R;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,6 +28,8 @@ public class MainActivity extends Activity {
 	public static final String PREFS_NAME = "MyPrefsFile";
 	public static DateTime startDate;
 	public static DateTime endDate;
+	public static PendingIntent pendingIntent;
+	public static AlarmManager alarmManager;
 	LocalDataManage DOP;
 	
     @Override
@@ -78,7 +83,7 @@ public class MainActivity extends Activity {
     }
     
     public void startReading(View view){
-    	Intent intent = new Intent(this, CalenderActivity.class);
+    	Intent intent = new Intent(this, Tabs.class);
 
 		// TODO: add space for plan name, default 'reading plan'+id, cant be empty"
 		String planName = "reading plan 1";
@@ -89,6 +94,31 @@ public class MainActivity extends Activity {
         endDate = new DateTime(EndDateValue.getYear(), EndDateValue.getMonth()+1, EndDateValue.getDayOfMonth(),0,0,0,0);
         
         CreateReadingPlan.CreatePlan(DOP, planName, startDate, endDate, this);
+        
+        
+        
+        
+        Calendar calendar = Calendar.getInstance();
+    
+		calendar.set(Calendar.HOUR_OF_DAY, 8);
+		calendar.set(Calendar.MINUTE,0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+	
+		alarmManager = (AlarmManager) getApplicationContext().getSystemService(getBaseContext().ALARM_SERVICE);
+		
+		int id = (int) System.currentTimeMillis();
+	
+	 	Intent intent0 = new Intent(this, TimeAlarm.class);	 
+	
+	 	pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), id, intent0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+	 	Log.v("first","notify");
+
+	 	alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 24*60*60*1000, pendingIntent);
+        
+        
+        
         
     	startActivity(intent);
     }
