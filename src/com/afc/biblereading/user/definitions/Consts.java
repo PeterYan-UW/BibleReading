@@ -7,4 +7,5 @@ public interface Consts {
     String AUTH_SECRET = "X3OfQzMLQbVfGb-";
     String POSITION = "position";
     String EMPTY_STRING = "";
+	String PREFS_NAME = "BibleReadingUser";
 }

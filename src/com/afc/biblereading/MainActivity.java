@@ -7,16 +7,21 @@ import java.util.HashMap;
 import org.joda.time.DateTime;
 
 import com.afc.biblereading.R;
+import com.afc.biblereading.helper.DataHolder;
+import com.afc.biblereading.user.CreateSessionActivity;
+import com.afc.biblereading.user.UserActivity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.Toast;
 import android.graphics.Typeface;
 import android.widget.TextView;
 
@@ -66,15 +71,29 @@ public class MainActivity extends Activity {
     }
 
     @Override
+	protected void onResume(){
+		super.onResume();
+		if (DataHolder.getDataHolder().getSignInQbUser()== null){
+    		Intent user = new Intent(this, CreateSessionActivity.class);
+    		startActivity(user);  			
+		}
+    }
+    
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    	switch (item.getItemId()) {
+	        case R.id.user:
+	        	if (DataHolder.getDataHolder().getSignInQbUser() == null){
+	        		Intent user = new Intent(this, CreateSessionActivity.class);
+	        		startActivity(user);
+	        	}
+	        	else{
+	        		Intent user = new Intent(this, UserActivity.class);
+	        		startActivity(user);
+	        	}
+	        default:
+	        	return super.onOptionsItemSelected(item);
+    	}
     }
     
     public void startReading(View view){
@@ -87,10 +106,31 @@ public class MainActivity extends Activity {
 
         startDate = new DateTime(StartDateValue.getYear(), StartDateValue.getMonth()+1, StartDateValue.getDayOfMonth(),0,0,0,0);
         endDate = new DateTime(EndDateValue.getYear(), EndDateValue.getMonth()+1, EndDateValue.getDayOfMonth(),0,0,0,0);
-        
         CreateReadingPlan.CreatePlan(DOP, planName, startDate, endDate, this);
-        
     	startActivity(intent);
     }
     
+	private Boolean exit = false;
+	@Override
+    public void onBackPressed() {
+        if (exit) {
+            DataHolder.getDataHolder().setSignInQbUser(null);
+            DataHolder.getDataHolder().setSignInUserGroup(null);
+            DataHolder.getDataHolder().setSignInUserQbGroup(null);
+        	Intent intent = new Intent(Intent.ACTION_MAIN);
+        	intent.addCategory(Intent.CATEGORY_HOME);
+        	intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        	startActivity(intent);
+        } else {
+            Toast.makeText(this, "Press Back again to Exit.",
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
+        }
+    }
 }

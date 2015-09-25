@@ -1,9 +1,13 @@
 package com.afc.biblereading.user;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.afc.biblereading.MainActivity;
 import com.afc.biblereading.R;
 import com.afc.biblereading.group.Group;
 import com.afc.biblereading.helper.DataHolder;
@@ -19,10 +23,13 @@ import com.quickblox.users.model.QBUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.afc.biblereading.user.definitions.Consts.PREFS_NAME;
+
 public class SignInActivity extends BaseActivity {
 
     private EditText emailEditText;
     private EditText passwordEditText;
+    private CheckBox stayLoginCheckBox;
 
     @Override
     public void onCreate(Bundle savedInstanceBundle) {
@@ -34,6 +41,7 @@ public class SignInActivity extends BaseActivity {
     private void initUI() {
         emailEditText = (EditText) findViewById(R.id.email_edittext);
         passwordEditText = (EditText) findViewById(R.id.password_edittext);
+        stayLoginCheckBox = (CheckBox) findViewById(R.id.stay_login);
     }
 
     public void onClick(View view) {
@@ -44,20 +52,25 @@ public class SignInActivity extends BaseActivity {
                 // Sign in application with user
                 //
                 QBUser qbUser = new QBUser(null, passwordEditText.getText().toString(),emailEditText.getText().toString());
+                final Boolean stayLogin = stayLoginCheckBox.isChecked();
                 QBUsers.signIn(qbUser, new QBEntityCallbackImpl<QBUser>() {
                     @Override
                     public void onSuccess(QBUser qbUser, Bundle bundle) {
                         progressDialog.hide();
 
                         setResult(RESULT_OK);
-
+                        if (stayLogin){
+                            SharedPreferences user = getSharedPreferences(PREFS_NAME, 0);
+                            SharedPreferences.Editor editor = user.edit();
+                            editor.putString("email", qbUser.getEmail());
+                            editor.putString("passwd", passwordEditText.getText().toString());
+                            editor.commit();
+                        }
+                        
                         DataHolder.getDataHolder().setSignInQbUser(qbUser);
                         checkUserGroup(qbUser);
-                        // password does not come, so if you want use it somewhere else, try something like this:
-                        DataHolder.getDataHolder().setSignInUserPassword(passwordEditText.getText().toString());
                         DialogUtils.showLong(context, getResources().getString(R.string.user_successfully_sign_in));
-
-                        finish();
+                        startMainAcitvity();
                     }
 
 					@Override
@@ -72,7 +85,13 @@ public class SignInActivity extends BaseActivity {
     }
 
 
-    private void checkUserGroup(QBUser qbUser) {
+    protected void startMainAcitvity() {
+		Intent main = new Intent(this, MainActivity.class);
+		startActivity(main);
+		finish();		
+	}
+
+	private void checkUserGroup(QBUser qbUser) {
     	QBRequestGetBuilder userGroupRequestBuilder = new QBRequestGetBuilder();
     	userGroupRequestBuilder.in("members", qbUser.getId());
     	QBCustomObjects.getObjects("group", userGroupRequestBuilder, new QBEntityCallbackImpl<ArrayList<QBCustomObject>>(){
@@ -92,7 +111,5 @@ public class SignInActivity extends BaseActivity {
 				DialogUtils.showLong(context, errors.get(0));				
 			}
     	});
-		
-		
 	}
 }

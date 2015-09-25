@@ -2,10 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.afc.biblereading.UserGroupActivity" >
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+	<item android:id="@+id/leave_group"
+          android:title="Leave Group"/>  
 
 </menu>

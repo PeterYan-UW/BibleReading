@@ -30,7 +30,7 @@ public class util {
         return dateFormat.format(date);
 	}
 	
-	public static Date formatDateTime(Context context, String timeToFormat) {
+	public static Date formatDateTime(String timeToFormat) {
 	    SimpleDateFormat iso8601Format = new SimpleDateFormat(
 	            "yyyy-MM-dd HH:mm:ss");
 	    Date date = null;

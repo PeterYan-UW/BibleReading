@@ -24,7 +24,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:orientation="horizontal"
-	            android:layout_above="@+id/user_group_finished_rate">
+	            android:layout_above="@+id/group_size">
 	
 	            <TextView
 	                android:id="@+id/group_name_title_textview"
@@ -41,42 +41,38 @@
 	                android:singleLine="true" />
 	
 	        </LinearLayout>
-	
-	        <ProgressBar
-                android:id="@+id/user_group_finished_rate"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-        		android:layout_below="@+id/group_name_layout"/>
 	        
 	        <LinearLayout
-                android:id="@+id/rate_layout"
+                android:id="@+id/group_size"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-        		android:layout_below="@+id/user_group_finished_rate"
+        		android:layout_below="@+id/group_name_layout"
 	            android:orientation="horizontal">
 	
 	            <TextView
-	                android:id="@+id/rate_title_textview"
+	                android:id="@+id/num_member_title_textview"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:text="@string/rate_with_colon"
+	                android:text="@string/group_size_with_colon"
 	                android:textStyle="bold" />
 	
 	            <TextView
-	                android:id="@+id/user_group_rate_textview"
+	                android:id="@+id/user_group_number_textview"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:ellipsize="end"
 	                android:singleLine="true" />
 	        </LinearLayout>
-
-	        <Button
-	            android:id="@+id/leave_group_button"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:onClick="onClick"
-	            android:text="@string/leave_group" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+	            android:text="@string/group_members" />
+	        <ListView
+		        android:id="@+id/member_listview"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" />
 
 		</LinearLayout>
 
@@ -103,4 +99,11 @@
 
 		</LinearLayout>
 	</LinearLayout>
+	<ProgressBar
+        android:id="@+id/user_group_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
 </RelativeLayout>

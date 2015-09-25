@@ -16,7 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
-public class CustomCheckboxAdapter  extends ArrayAdapter<Task> {
+public class CustomCheckboxAdapter extends ArrayAdapter<Task> {
 	private ArrayList<Task> taskList;
 	
 	public CustomCheckboxAdapter(Context context, int resource, 

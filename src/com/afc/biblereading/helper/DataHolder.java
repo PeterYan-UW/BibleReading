@@ -6,6 +6,7 @@ import java.util.List;
 import android.util.Log;
 
 import com.afc.biblereading.group.Group;
+import com.afc.biblereading.group.Member;
 import com.quickblox.customobjects.model.QBCustomObject;
 import com.quickblox.users.model.QBUser;
 
@@ -16,15 +17,23 @@ public class DataHolder {
     private List<QBUser> qbUsersList = new ArrayList<QBUser>();
     private List<QBCustomObject> qbGroupList = new ArrayList<QBCustomObject>();
     private List<Group> groupList = new ArrayList<Group>();
+    private ArrayList<String> userLogList = new ArrayList<String>();
+    private ArrayList<Member> Member = new ArrayList<Member>();
+    private QBCustomObject signInUserQBGroup;
     private QBUser signInQbUser;
     private Group signInUserGroup;
-    private QBCustomObject signInUserQBGroup;
 
     public static synchronized DataHolder getDataHolder() {
         if (dataHolder == null) {
             dataHolder = new DataHolder();
         }
         return dataHolder;
+    }
+    public void setUserLogList(ArrayList<String> userLogList){
+    	this.userLogList = userLogList;
+    }
+    public ArrayList<String> getUserLogList(){
+    	return this.userLogList;
     }
     public void setQBGroupList(List<QBCustomObject> qbGroupList){
     	Log.v("data Holder", "set group list");

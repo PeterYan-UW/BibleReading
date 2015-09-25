@@ -20,7 +20,6 @@ public class GroupListActivity extends Activity implements AdapterView.OnItemCli
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_list);
-
         initUI();
         initGroupList();
 	}

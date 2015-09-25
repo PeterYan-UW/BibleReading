@@ -1,34 +1,41 @@
 package com.afc.biblereading.user;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ScrollView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.afc.biblereading.R;
+import com.afc.biblereading.adapter.UserLogListAdapter;
 import com.afc.biblereading.group.UserGroupActivity;
 import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.DialogUtils;
 import com.quickblox.core.QBEntityCallbackImpl;
+import com.quickblox.core.request.QBRequestGetBuilder;
+import com.quickblox.customobjects.QBCustomObjects;
+import com.quickblox.customobjects.model.QBCustomObject;
 import com.quickblox.users.QBUsers;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.afc.biblereading.user.definitions.Consts.POSITION;
+import static com.afc.biblereading.user.definitions.Consts.PREFS_NAME;
 
 public class UserActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
-    private ScrollView userInfo;
-    private TextView askLogin;
+    private LinearLayout userInfo;
     private TextView emailTextView;
     private TextView fullNameTextView;
+    private ListView userLogListView;
     private Button logOutButton;
-    private Button signInButton;
     private Button selfEditButton;
-    private Button singUpButton;
     private Button groupButton;
 
     @Override
@@ -36,47 +43,57 @@ public class UserActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
         initUI();
+        if (DataHolder.getDataHolder().getSignInQbUser() != null) {
+        	fillAllFields();
+        }
     }
 
     private void initUI() {
-    	userInfo = (ScrollView) findViewById(R.id.user_info_scrollview);
-    	askLogin = (TextView) findViewById(R.id.no_user);
+    	userInfo = (LinearLayout) findViewById(R.id.user_info_linearview);
         emailTextView = (TextView) findViewById(R.id.email_textview);
         fullNameTextView = (TextView) findViewById(R.id.full_name_textview);
+        userLogListView = (ListView) findViewById(R.id.user_log_listview);
         logOutButton = (Button) findViewById(R.id.logout_button);
-        signInButton = (Button) findViewById(R.id.sign_in_button);
         selfEditButton = (Button) findViewById(R.id.self_edit_button);
-        singUpButton = (Button) findViewById(R.id.sign_up_button);
         groupButton = (Button) findViewById(R.id.group_button);
     }
 
     private void fillAllFields() {
         fillField(emailTextView, DataHolder.getDataHolder().getSignInUserEmail());
         fillField(fullNameTextView, DataHolder.getDataHolder().getSignInUserFullName());
+        QBRequestGetBuilder logRequestBuilder = new QBRequestGetBuilder();
+    	logRequestBuilder.eq("user_id", DataHolder.getDataHolder().getSignInUserId());
+    	QBCustomObjects.getObjects("DailyRecords", logRequestBuilder, new QBEntityCallbackImpl<ArrayList<QBCustomObject>>() {
+			
+			@Override
+			public void onSuccess(ArrayList<QBCustomObject> logs, Bundle bundle) {
+				ArrayList<String> logList = new ArrayList<String>();
+				for (QBCustomObject log : logs){
+					String g = (String) log.getFields().get("task");
+					logList.add(g);
+				}
+				UserLogListAdapter logAdapter = new UserLogListAdapter(context, R.layout.list_item_user_log, logList);
+		        userLogListView.setAdapter(logAdapter);
+			}
+			
+			@Override
+			public void onError(List<String> errors) {
+				DialogUtils.showLong(context, errors.get(0));				
+			}
+		});        
     }
 
     @Override
     public void onResume() {
         super.onResume();
         if (DataHolder.getDataHolder().getSignInQbUser() != null) {
-            signInButton.setVisibility(View.GONE);
-            singUpButton.setVisibility(View.GONE);
-            askLogin.setVisibility(View.GONE);
-            userInfo.setVisibility(View.VISIBLE);
-            logOutButton.setVisibility(View.VISIBLE);
-            selfEditButton.setVisibility(View.VISIBLE);
-            groupButton.setVisibility(View.VISIBLE);
-            fillAllFields();
+        	fillAllFields();
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            signInButton.setVisibility(View.GONE);
-            askLogin.setVisibility(View.GONE);
-            logOutButton.setVisibility(View.VISIBLE);
-            groupButton.setVisibility(View.VISIBLE);
             fillAllFields();
         }
     }
@@ -94,26 +111,26 @@ public class UserActivity extends BaseActivity implements AdapterView.OnItemClic
                 break;
             case R.id.logout_button:
                 progressDialog.show();
-
                 // Logout
-                //
                 QBUsers.signOut(new QBEntityCallbackImpl() {
                     @Override
                     public void onSuccess() {
                         progressDialog.hide();
-
                         DialogUtils.showLong(context, getResources().getString(R.string.user_log_out_msg));
                         updateDataAfterLogOut();
+                        SharedPreferences user = getSharedPreferences(PREFS_NAME, 0);
+                        SharedPreferences.Editor editor = user.edit();
+                        editor.putString("email", null);
+                        editor.putString("passwd", null);
+                        editor.commit();
+                        backToCreateSession();
                     }
-
                     @Override
                     public void onError(List list) {
                         progressDialog.hide();
-
                         DialogUtils.showLong(context, list.get(0).toString());
                     }
                 });
-
                 break;
             case R.id.self_edit_button:
                 intent = new Intent(this, UpdateUserActivity.class);
@@ -126,17 +143,16 @@ public class UserActivity extends BaseActivity implements AdapterView.OnItemClic
         }
     }
     
-    private void updateDataAfterLogOut() {
+    protected void backToCreateSession() {
+    	Intent sessionStart = new Intent(this, CreateSessionActivity.class);
+    	startActivity(sessionStart);
+    	finish();		
+	}
+
+	private void updateDataAfterLogOut() {
         DataHolder.getDataHolder().setSignInQbUser(null);
         DataHolder.getDataHolder().setSignInUserGroup(null);
         DataHolder.getDataHolder().setSignInUserQbGroup(null);
-        signInButton.setVisibility(View.VISIBLE);
-        askLogin.setVisibility(View.VISIBLE);
-        userInfo.setVisibility(View.GONE);
-        logOutButton.setVisibility(View.GONE);
-        selfEditButton.setVisibility(View.GONE);
-        singUpButton.setVisibility(View.VISIBLE);
-        groupButton.setVisibility(View.GONE);
     }
 
     @Override

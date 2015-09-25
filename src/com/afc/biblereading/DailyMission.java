@@ -29,7 +29,7 @@ public class DailyMission extends Activity {
 	private void populateListView() {		
 		LocalDataManage DOP = ((ApplicationSingleton)getApplication()).getDataBase();
 		ArrayList<HashMap<String, Object>> plans = DOP.getPlanInfo(DOP);
-		Date startDay = util.formatDateTime(this, (String) plans.get(0).get("start_day"));
+		Date startDay = util.formatDateTime((String) plans.get(0).get("start_day"));
 		ArrayList<HashMap<String, Object>> SpecificDayTask = DOP.getDailyTask(DOP, 0, CalenderActivity.targetDay,startDay);
 		
 		ArrayList<Task> taskList = new ArrayList<Task>();

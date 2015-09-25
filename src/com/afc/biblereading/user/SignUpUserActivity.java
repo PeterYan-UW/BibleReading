@@ -1,9 +1,11 @@
 package com.afc.biblereading.user;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.afc.biblereading.MainActivity;
 import com.afc.biblereading.R;
 import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.DialogUtils;
@@ -57,7 +59,7 @@ public class SignUpUserActivity extends BaseActivity {
                         DataHolder.getDataHolder().setSignInQbUser(qbUser);
                         DataHolder.getDataHolder().setSignInUserPassword(passwordEditText.getText().toString());
 
-                        finish();
+                        startMainAcitvity();
                     }
 
                     @Override
@@ -70,4 +72,9 @@ public class SignUpUserActivity extends BaseActivity {
                 break;
         }
     }
+    protected void startMainAcitvity() {
+		Intent main = new Intent(this, MainActivity.class);
+		startActivity(main);
+		finish();		
+	}
 }

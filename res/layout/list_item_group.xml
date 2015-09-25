@@ -31,12 +31,6 @@
                 android:singleLine="true" />
 
         </LinearLayout>
-
-        <ProgressBar
-                    android:id="@+id/finished_rate"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,11 +40,11 @@
                 android:id="@+id/rate_title_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/rate_with_colon"
+                android:text="@string/group_size_with_colon"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/rate_textview"
+                android:id="@+id/group_size_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"

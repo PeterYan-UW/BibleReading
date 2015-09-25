@@ -64,7 +64,7 @@ public class ShowGroupActivity extends BaseActivity {
 	    	position= extras.getInt(POSITION);
 	    }
 	    QBCustomObject oldQBGroup = DataHolder.getDataHolder().getQBGroup(position);
-	    ArrayList<Integer> members = DataHolder.getDataHolder().getGroup(position).getMembersList();
+	    ArrayList<Integer> members = DataHolder.getDataHolder().getGroup(position).getMembersId();
 	    members.add(DataHolder.getDataHolder().getSignInUserId());
 	    
 	    QBCustomObject qbGroup = new QBCustomObject();

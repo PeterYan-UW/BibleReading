@@ -18,7 +18,7 @@
     <string name="tags">Tags</string>
     <string name="name_with_colon">Name:</string>
     <string name="tags_with_colon">Tags:</string>
-    <string name="rate_with_colon">Finished Rate:</string>
+    <string name="group_size_with_colon">Number of Members:</string>
     <string name="create_group">New Group</string>
     <string name="join_group">Join group</string>
     <string name="leave_group">Leave Group</string>
@@ -52,5 +52,8 @@
     <string name="dlg_ok">OK</string>
     <string name="dlg_cancel">Cancel</string>
     <string name="three_dots">…</string>
+    <string name="reading_history">Reading History</string>
+    <string name="group_members">Group Members</string>
+    
     
 </resources>

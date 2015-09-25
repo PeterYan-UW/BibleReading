@@ -129,9 +129,15 @@ public class CalenderActivity extends FragmentActivity{
 
 		// Get Today's Task
 		createScheduledNotification();
-		
+		SetCheckingButton();
 	}
-	
+
+	private void SetCheckingButton() {
+		if (DataHolder.getDataHolder().getSignInQbUser()!=null){
+			findViewById(R.id.CheckInTodayTask).setEnabled(true);;
+		}
+	}
+
 	private void setTodayTask() {
 		// Setup today's task title		
 		Typeface face0 = Typeface.createFromAsset(getAssets(),"fonts/fonts1.TTF");
@@ -145,8 +151,8 @@ public class CalenderActivity extends FragmentActivity{
 		
 		plan_id = (Integer) plans.get(0).get("plan_id");
 		Log.v((String) plans.get(0).get("start_day"),"chapternum");
-		startDay = util.formatDateTime(this, (String) plans.get(0).get("start_day"));
-		endDay = util.formatDateTime(this, (String) plans.get(0).get("end_day"));
+		startDay = util.formatDateTime((String) plans.get(0).get("start_day"));
+		endDay = util.formatDateTime((String) plans.get(0).get("end_day"));
 		ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
 		
 		Log.d("today task return", todayTask.toString());
@@ -178,7 +184,13 @@ public class CalenderActivity extends FragmentActivity{
 	@Override
 	protected void onResume(){
 		super.onResume();
+		Log.v("calender activity", "resume");
+		if (DataHolder.getDataHolder().getSignInQbUser()== null){
+    		Intent user = new Intent(this, CreateSessionActivity.class);
+    		startActivity(user);  			
+		}
 		refreshCalender();
+		SetCheckingButton();
 	}
 	
 	private void refreshCalender(){
@@ -298,8 +310,8 @@ public class CalenderActivity extends FragmentActivity{
                 }
             }, 3 * 1000);
         }
-
     }
+	
 	public void onClick(View view){
         switch (view.getId()) {
 	        case R.id.CheckInTodayTask:
@@ -318,14 +330,14 @@ public class CalenderActivity extends FragmentActivity{
 		        		}
 		        	}
 		        	final String checkInString = util.GenCheckInMessage(total, miss, finished);
-	
+		        	final Boolean status = (miss==0);
 		    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		    		builder.setTitle("发表一下信息到小组");
 		    		builder.setMessage(checkInString);
 		    		builder.setPositiveButton("发表", new DialogInterface.OnClickListener() {
 		    			@Override
 		    			public void onClick(DialogInterface dialogInterface, int i) {
-		    				checkInTodayTask(checkInString);
+		    				checkInTodayTask(checkInString, status);
 		    			}
 		    		});
 		    		builder.setNegativeButton("取消",null);
@@ -335,13 +347,17 @@ public class CalenderActivity extends FragmentActivity{
         }
 	}
 	
-	private void checkInTodayTask(String message){
+	private void checkInTodayTask(String message, Boolean status){
 		QBCustomObject task = new QBCustomObject();
 		task.putString("task", message);
+		task.putBoolean("done", status);
 		task.setClassName("DailyRecords");
 		QBCustomObjects.createObject(task, new QBEntityCallbackImpl<QBCustomObject>() {
     	    @Override
     	    public void onSuccess(QBCustomObject createdObject, Bundle bundle) {
+    	    	Toast.makeText(getApplicationContext(),
+		  			"今日读经进度已成功发布",
+		  			Toast.LENGTH_LONG).show();
     	    }
     	 
     	    @Override

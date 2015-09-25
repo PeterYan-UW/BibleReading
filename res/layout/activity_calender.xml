@@ -21,7 +21,8 @@
 	        android:layout_height="wrap_content"
         	android:layout_alignParentRight="true"
 	        android:onClick="onClick"
-	        android:text="Check in" />
+	        android:text="Check in" 
+	        android:enabled="false"/>
 
 	</RelativeLayout>
     

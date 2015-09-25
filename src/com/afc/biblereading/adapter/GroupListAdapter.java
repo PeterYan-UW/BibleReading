@@ -41,29 +41,27 @@ public class GroupListAdapter extends BaseAdapter  {
             convertView = layoutInflater.inflate(R.layout.list_item_group, null);
             viewHolder = new ViewHolder();
             viewHolder.groupNameTextView = (TextView) convertView.findViewById(R.id.group_name_textview);
-            viewHolder.rateTextView = (TextView) convertView.findViewById(R.id.rate_textview);
-            viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.finished_rate);
+            viewHolder.groupSizeTextView = (TextView) convertView.findViewById(R.id.group_size_textview);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        applyGroupName(viewHolder, DataHolder.getDataHolder().getGroupName(position));
-        applyRate(viewHolder, DataHolder.getDataHolder().getGroupRate(position));
+        applyGroupName(viewHolder, 
+        		DataHolder.getDataHolder().getGroupName(position),
+        		DataHolder.getDataHolder().getGroup(position).getGroupSize()
+        		);
         return convertView;
 	}
 	
-    private void applyGroupName(ViewHolder viewHolder, String groupName) {
+    private void applyGroupName(ViewHolder viewHolder, String groupName, int groupSize) {
         viewHolder.groupNameTextView.setText(groupName);
+    	viewHolder.groupSizeTextView.setText(String.valueOf(groupSize));
     }
 
-    private void applyRate(ViewHolder viewHolder, int rate) {
-    	viewHolder.rateTextView.setText(rate+" %");
-    	viewHolder.progressBar.setProgress(rate);
-    }
     public static class ViewHolder {
 
         TextView groupNameTextView;
-        TextView rateTextView;
+        TextView groupSizeTextView;
         ProgressBar progressBar;
     }
 
