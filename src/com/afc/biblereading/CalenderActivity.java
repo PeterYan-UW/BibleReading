@@ -10,6 +10,7 @@ import java.util.List;
 import junit.framework.Protectable;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import com.afc.biblereading.R;
 import com.afc.biblereading.adapter.CustomCheckboxAdapter;
@@ -63,6 +64,7 @@ public class CalenderActivity extends FragmentActivity{
 	private int index;
 	public static Date targetDay;
 	ArrayList<Task> todayTaskList;
+	public static int unfinish = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +178,8 @@ public class CalenderActivity extends FragmentActivity{
 				  	Toast.makeText(getApplicationContext(),
 				  			"Clicked on Row: " + task.asString(),
 				  			Toast.LENGTH_LONG).show();
+				  	Log.v("refresh","notify");
+				  	refreshCalender();
 			  }
 		});
 		
@@ -200,6 +204,16 @@ public class CalenderActivity extends FragmentActivity{
 				R.color.failed, R.color.passed, R.color.future);
 		caldroidFragment.setBackgroundResourceForDates(backgroundForDateMap);
 		caldroidFragment.refreshView();
+		
+		int TodayTaskSize = DOP.getTodayTask(DOP, 0, startDay).size();
+		unfinish=0;
+		for (int i=0; i<TodayTaskSize; i++) {
+			if ((Integer) DOP.getTodayTask(DOP, 0, startDay).get(i).get("status")!=1) {
+				unfinish++;
+			}
+		}
+		Log.v(Integer.toString(unfinish),"exist");
+		
 	}
 
 	/**
@@ -224,33 +238,39 @@ public class CalenderActivity extends FragmentActivity{
 	
 		// Get new calendar object and set the date to now
 	
-		Calendar calendar = Calendar.getInstance();
-	
-		calendar.setTimeInMillis(System.currentTimeMillis());
-	
-		// Add defined amount of days to the date
-	
-		calendar.add(Calendar.SECOND, 10);
-		
-		// Retrieve alarm manager from the system
-	
-		AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(getBaseContext().ALARM_SERVICE);
-	
-	 	// Every scheduled intent needs a different ID, else it is just executed once
-	
-		int id = (int) System.currentTimeMillis();
-	
-	 	// Prepare the intent which should be launched at the date
-	
-	 	Intent intent = new Intent(this, TimeAlarm.class);	 
-	
-	 // Prepare the pending intent
-	
-	 	PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		
-	 	// Register the alert in the system. You have the option to define if the device has to wake up on the alert or not
-	 	Log.v("first","notify");
-		//alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60, pendingIntent);
+//		Calendar calendar = Calendar.getInstance();
+//	
+//		//calendar.setTimeInMillis(System.currentTimeMillis());
+//	
+//		// Add defined amount of days to the date
+//		
+//		//calendar.set(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, 19, 20, 0);
+//		calendar.set(Calendar.HOUR_OF_DAY, 21);
+//		calendar.set(Calendar.MINUTE,06);
+//		calendar.set(Calendar.SECOND, 0);
+//		calendar.set(Calendar.MILLISECOND, 0);
+//		
+//		// Retrieve alarm manager from the system
+//	
+//		alarmManager = (AlarmManager) getApplicationContext().getSystemService(getBaseContext().ALARM_SERVICE);
+//	
+//	 	// Every scheduled intent needs a different ID, else it is just executed once
+//	
+//		int id = (int) System.currentTimeMillis();
+//	
+//	 	// Prepare the intent which should be launched at the date
+//	
+//	 	Intent intent = new Intent(this, TimeAlarm.class);	 
+//	
+//	 // Prepare the pending intent
+//	
+//	 	pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//		
+//	 	// Register the alert in the system. You have the option to define if the device has to wake up on the alert or not
+//	 	Log.v("first","notify");
+//	 	
+//		//alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60, pendingIntent);
+//	 	alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 60*1000, pendingIntent);
 	}
 	
     @Override
@@ -265,6 +285,9 @@ public class CalenderActivity extends FragmentActivity{
 		Intent backMain = new Intent(this, MainActivity.class);
 		LocalDataManage DOP = ((ApplicationSingleton)getApplication()).getDataBase();
 		DOP.DeletePlan(DOP);
+		
+		MainActivity.alarmManager.cancel(MainActivity.pendingIntent);
+		
     	startActivity(backMain);    	
     }
 	

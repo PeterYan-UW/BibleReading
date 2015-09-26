@@ -2,6 +2,7 @@ package com.afc.biblereading.adapter;
 
 import java.util.ArrayList;
 
+import com.afc.biblereading.CalenderActivity;
 import com.afc.biblereading.R;
 import com.afc.biblereading.Task;
 import com.afc.biblereading.R.id;
@@ -52,6 +53,8 @@ public class CustomCheckboxAdapter extends ArrayAdapter<Task> {
 						Toast.makeText(getContext().getApplicationContext(), 
 								"Finish reading " + cb.getText(), 
 								Toast.LENGTH_LONG).show();
+						CalenderActivity.unfinish--;
+						Log.v(Integer.toString(CalenderActivity.unfinish),"unfinish");
 					}
 					task.setDone(getContext(), cb.isChecked());
 				}

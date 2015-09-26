@@ -64,9 +64,13 @@ public class TimeAlarm extends BroadcastReceiver {
  
 
 		// Fire the notification
-		Log.v("notify0","notify");
-		notificationManager.notify(1, notification);
-		Log.v("notify","notify");
+
+		if (CalenderActivity.unfinish!=0) {
+			Log.v("notify0","notify");
+			notificationManager.notify(1, notification);
+			Log.v("notify","notify");
+		}
+		
 
 	}
 

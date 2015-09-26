@@ -11,5 +11,7 @@
     <string name="title_activity_show_group">ShowGroupActivity</string>
     <string name="title_activity_user_group">UserGroupActivity</string>
     <string name="user">User</string>
-
+	<string name="title_activity_tabs">Tabs</string>
+	<string name="title_acitvity_first">First</string>
+	<string name="title_acitvity_second">Second</string>
 </resources>

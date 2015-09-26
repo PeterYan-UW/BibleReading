@@ -70,6 +70,19 @@
             android:name="com.afc.biblereading.group.UserGroupActivity"
             android:label="@string/title_activity_user_group" >
         </activity>
+        <activity
+            android:name="com.afc.biblereading.Tabs"
+            android:label="@string/title_activity_tabs" >
+        </activity>
+        <activity
+            android:name="com.afc.biblereading.First"
+            android:label="@string/title_acitvity_first" >
+        </activity>
+        <activity
+            android:name="com.afc.biblereading.Second"
+            android:label="@string/title_acitvity_second" >
+        </activity>
+        <receiver android:name="com.afc.biblereading.TimeAlarm" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
