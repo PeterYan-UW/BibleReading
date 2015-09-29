@@ -3,6 +3,7 @@
 	<name>BibleReading</name>
 	<comment></comment>
 	<projects>
+		<project>facebook</project>
 		<project>library</project>
 	</projects>
 	<buildSpec>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.biblereading"
+    package="com.afc.biblereading"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -9,24 +9,87 @@
         android:targetSdkVersion="21" />
 
     <application
+        android:name=".ApplicationSingleton"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".CalenderActivity"
-            android:label="@string/title_activity_calender" >
+            android:label="@string/title_activity_calender" />
+        <activity
+            android:name=".DailyMission"
+            android:label="@string/title_activity_dailymission" />
+        <activity
+            android:name=".user.CreateSessionActivity"
+            android:label="@string/title_activity_login" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter> 
         </activity>
+        <activity
+            android:name=".user.UserActivity"
+            android:label="@string/sign_up"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".user.SignUpUserActivity"
+            android:label="@string/sign_up"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".user.SignInActivity"
+            android:label="@string/sign_in"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".user.ShowUserActivity"
+            android:label="@string/show_user"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".user.UpdateUserActivity"
+            android:label="@string/update_user"
+            android:screenOrientation="portrait" />
+
+        <receiver android:name=".TimeAlarm" />
+
+        <activity
+            android:name=".group.GroupListActivity"
+            android:label="@string/title_activity_group_list" >
+        </activity>
+        <activity
+            android:name="com.afc.biblereading.group.ShowGroupActivity"
+            android:label="@string/title_activity_show_group" >
+        </activity>
+        <activity
+            android:name="com.afc.biblereading.group.UserGroupActivity"
+            android:label="@string/title_activity_user_group" >
+        </activity>
+        <activity
+            android:name="com.afc.biblereading.Tabs"
+            android:label="@string/title_activity_tabs" >
+        </activity>
+        <activity
+            android:name="com.afc.biblereading.First"
+            android:label="@string/title_acitvity_first" >
+        </activity>
+        <activity
+            android:name="com.afc.biblereading.Second"
+            android:label="@string/title_acitvity_second" >
+        </activity>
+        <receiver android:name="com.afc.biblereading.TimeAlarm" />
     </application>
-    
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
 </manifest>

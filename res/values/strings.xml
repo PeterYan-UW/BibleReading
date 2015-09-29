@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BibleReading</string>
+    <string name="app_name">Bible Reading</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_calender">Calender</string>
-
+    <string name="title_activity_dailymission">Daily Mission</string>
+    <string name="please_login">Login to get more feature</string>
+    <string name="title_activity_group_list">GroupListActivity</string>
+    <string name="title_activity_show_group">ShowGroupActivity</string>
+    <string name="title_activity_user_group">UserGroupActivity</string>
+    <string name="user">User</string>
+	<string name="title_activity_tabs">Tabs</string>
+	<string name="title_acitvity_first">First</string>
+	<string name="title_acitvity_second">Second</string>
 </resources>
