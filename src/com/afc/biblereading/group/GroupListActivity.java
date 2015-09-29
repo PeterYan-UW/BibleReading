@@ -2,6 +2,7 @@ package com.afc.biblereading.group;
 
 import com.afc.biblereading.R;
 import com.afc.biblereading.adapter.GroupListAdapter;
+import com.afc.biblereading.helper.DataHolder;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -43,6 +44,8 @@ public class GroupListActivity extends Activity implements AdapterView.OnItemCli
         Intent intent = new Intent(this, ShowGroupActivity.class);
         intent.putExtra(POSITION, position);
         startActivity(intent);
-        finish();
+        if (DataHolder.getDataHolder().getSignInUserGroup()!=null){
+        	finish();
+        }
     }
 }

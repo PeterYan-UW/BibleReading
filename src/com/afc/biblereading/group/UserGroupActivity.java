@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +42,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class UserGroupActivity extends BaseActivity {
     private LinearLayout createGroupLayout;
@@ -74,6 +76,10 @@ public class UserGroupActivity extends BaseActivity {
         	userGroupLayout.setVisibility(View.VISIBLE);
         	applyUserGroupInfo(userGroup.getName(), userGroup.getGroupSize());
         }		
+        else{
+        	createGroupLayout.setVisibility(View.VISIBLE);
+        	userGroupLayout.setVisibility(View.GONE);        	
+        }
 	}
     
     private void applyUserGroupInfo(String groupName, int memberNum) {
@@ -99,6 +105,10 @@ public class UserGroupActivity extends BaseActivity {
     @Override
     public void onResume(){
 		super.onResume(); 
+		if (DataHolder.getDataHolder().getSignInQbUser()== null){
+    		Intent user = new Intent(this, CreateSessionActivity.class);
+    		startActivity(user);  			
+		}
 		initUserGroup();  	
     }
 	@Override
@@ -112,8 +122,7 @@ public class UserGroupActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId()) {
 	        case R.id.leave_group:
-	        	GroupHelper.leaveGroup(context);
-	        	finish();
+	        	leaveGroup();
 	        	return true;
 			default:
 			    return super.onOptionsItemSelected(item);
@@ -131,6 +140,37 @@ public class UserGroupActivity extends BaseActivity {
         }
     }
 	
+	private void leaveGroup() {
+		QBCustomObject oldQBGroup = DataHolder.getDataHolder().getSignInUserQbGroup();
+	    ArrayList memberList = DataHolder.getDataHolder().getSignInUserGroup().getMembersId();
+	    Integer currentUserId = DataHolder.getDataHolder().getSignInUserId();
+	    Log.v("current user id", String.valueOf(currentUserId));
+	    Log.v("before leave group", memberList.toString());
+	    memberList.remove(String.valueOf(currentUserId));
+	    Log.v("leave group", memberList.toString());
+	    
+	    QBCustomObject qbGroup = new QBCustomObject();
+	    qbGroup.setClassName("group");
+	    HashMap<String, Object> fields = new HashMap<String, Object>();
+	    fields.put("members", memberList);
+	    qbGroup.setFields(fields);
+	    qbGroup.setCustomObjectId(oldQBGroup.getCustomObjectId());
+	    QBCustomObjects.updateObject(qbGroup, new QBEntityCallbackImpl<QBCustomObject>() {
+	        @Override
+	        public void onSuccess(QBCustomObject newQBGroup, Bundle params) {
+	        	Group group = util.QBGroup2Group(newQBGroup);
+	        	DataHolder.getDataHolder().setSignInUserGroup(null);	
+	        	DataHolder.getDataHolder().setSignInUserQbGroup(null);
+	        	initUserGroup();
+	        }
+	     
+	        @Override
+	        public void onError(List<String> errors) {
+				DialogUtils.showLong(context, errors.get(0));			     
+	        }
+	    });
+		
+	}
 	private void createGroup(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Create New Bible Reading Group");
@@ -171,4 +211,28 @@ public class UserGroupActivity extends BaseActivity {
 		builder.setNegativeButton("Cancel",null);
 		builder.create().show();
 	}
+	
+	private Boolean exit = false;
+	@Override
+    public void onBackPressed() {
+        if (exit) {
+            DataHolder.getDataHolder().setSignInQbUser(null);
+            DataHolder.getDataHolder().setSignInUserGroup(null);
+            DataHolder.getDataHolder().setSignInUserQbGroup(null);
+        	Intent intent = new Intent(Intent.ACTION_MAIN);
+        	intent.addCategory(Intent.CATEGORY_HOME);
+        	intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        	startActivity(intent);
+        } else {
+            Toast.makeText(this, "Press Back again to Exit.",
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
+        }
+    }
 }

@@ -16,8 +16,8 @@
 	<string name="title_acitvity_second">Second</string>
 	
 
-    <string name="radio1_text">日历</string>
-	<string name="radio2_text">文章</string>
-	<string name="radio3_text">团队</string>
-	<string name="radio4_text">设置</string>
+    <string name="task_text">任务</string>
+	<string name="info_text">信息</string>
+	<string name="group_text">小组</string>
+	<string name="user_text">用户</string>
 </resources>

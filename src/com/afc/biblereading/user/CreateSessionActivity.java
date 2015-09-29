@@ -45,7 +45,7 @@ public class CreateSessionActivity extends Activity{
     private Button signUpButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_start);
         context = this;
@@ -82,6 +82,12 @@ public class CreateSessionActivity extends Activity{
 						@Override
 	                    public void onError(List<String> errors) {
 	                        DialogUtils.showLong(context, errors.get(0));
+	                        SharedPreferences user = getSharedPreferences(PREFS_NAME, 0);
+	                        SharedPreferences.Editor editor = user.edit();
+	                        editor.putString("email", null);
+	                        editor.putString("passwd", null);
+	                        editor.commit();
+	                        onCreate(savedInstanceState);
 	                    }
                 	});
                 }
@@ -90,7 +96,12 @@ public class CreateSessionActivity extends Activity{
                 public void onError(List<String> errors) {
                     // print errors that came from server
                     DialogUtils.showLong(context, errors.get(0));
-                    progressBar.setVisibility(View.INVISIBLE);
+                    SharedPreferences user = getSharedPreferences(PREFS_NAME, 0);
+                    SharedPreferences.Editor editor = user.edit();
+                    editor.putString("email", null);
+                    editor.putString("passwd", null);
+                    editor.commit();
+                    onCreate(savedInstanceState);
                 }
             });
         	

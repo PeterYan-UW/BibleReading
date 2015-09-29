@@ -82,9 +82,9 @@
             android:name="com.afc.biblereading.Second"
             android:label="@string/title_acitvity_second" >
         </activity>
-        <activity android:name="com.afc.biblereading.Tabs2"></activity>
+        <activity android:name="com.afc.biblereading.Tabs"></activity>
         <activity android:name="com.afc.biblereading.Activity1"></activity>
-        <activity android:name="com.afc.biblereading.Activity2"></activity>
+        <activity android:name="com.afc.biblereading.InfoActivity"></activity>
         <activity android:name="com.afc.biblereading.Activity3"></activity>
         <activity android:name="com.afc.biblereading.Activity4"></activity>
         <receiver android:name="com.afc.biblereading.TimeAlarm" />

@@ -30,6 +30,7 @@
     <string name="logout">Log Out</string>
     <string name="login">Login</string>
     <string name="full_name">Full Name</string>
+    <string name="group_name">Group Name</string>
     <string name="fisrt_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="email">Email</string>

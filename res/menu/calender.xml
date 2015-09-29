@@ -3,8 +3,6 @@
     tools:context="com.example.biblereading.Calender" >
 
 	<item android:id="@+id/reset"
-          android:title="Reset Plan"/>  	
-	<item android:id="@+id/user"
-          android:title="@string/user"/>      
+          android:title="Reset Plan"/>  	  
 
 </menu>

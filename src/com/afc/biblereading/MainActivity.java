@@ -47,10 +47,8 @@ public class MainActivity extends Activity {
 		Log.d("database plan return", String.valueOf(result.size()));
 		Log.d("database plan return", result.toString());
 		
-//        if (value.equals("Yes")) {
         if (result.size()>0) {
-        	Intent intent = new Intent(this, CalenderActivity.class);
-        	
+        	Intent intent = new Intent(this, Tabs.class);
         	startActivity(intent);
         }
         else {
@@ -79,7 +77,7 @@ public class MainActivity extends Activity {
 	protected void onResume(){
 		super.onResume();
 		if (DataHolder.getDataHolder().getSignInQbUser()== null){
-    		Intent user = new Intent(this, CreateSessionActivity.class);
+    		Intent user = new Intent(this, Tabs.class);
     		startActivity(user);  			
 		}
     }
@@ -102,7 +100,7 @@ public class MainActivity extends Activity {
     }
     
     public void startReading(View view){
-    	Intent intent = new Intent(this, Tabs2.class);
+    	Intent intent = new Intent(this, Tabs.class);
 
 		// TODO: add space for plan name, default 'reading plan'+id, cant be empty"
 		String planName = "reading plan 1";
