@@ -102,7 +102,7 @@ public class MainActivity extends Activity {
     }
     
     public void startReading(View view){
-    	Intent intent = new Intent(this, Tabs.class);
+    	Intent intent = new Intent(this, Tabs2.class);
 
 		// TODO: add space for plan name, default 'reading plan'+id, cant be empty"
 		String planName = "reading plan 1";

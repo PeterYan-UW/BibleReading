@@ -14,4 +14,10 @@
 	<string name="title_activity_tabs">Tabs</string>
 	<string name="title_acitvity_first">First</string>
 	<string name="title_acitvity_second">Second</string>
+	
+
+    <string name="radio1_text">日历</string>
+	<string name="radio2_text">文章</string>
+	<string name="radio3_text">团队</string>
+	<string name="radio4_text">设置</string>
 </resources>
