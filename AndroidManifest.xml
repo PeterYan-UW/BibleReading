@@ -29,8 +29,9 @@
             android:label="@string/title_activity_login" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> 
+            </intent-filter>
         </activity>
         <activity
             android:name=".user.UserActivity"
@@ -63,31 +64,42 @@
             android:label="@string/title_activity_group_list" >
         </activity>
         <activity
-            android:name="com.afc.biblereading.group.ShowGroupActivity"
+            android:name=".group.ShowGroupActivity"
             android:label="@string/title_activity_show_group" >
         </activity>
         <activity
-            android:name="com.afc.biblereading.group.UserGroupActivity"
+            android:name=".group.UserGroupActivity"
             android:label="@string/title_activity_user_group" >
         </activity>
         <activity
-            android:name="com.afc.biblereading.Tabs"
+            android:name=".Tabs"
             android:label="@string/title_activity_tabs" >
         </activity>
         <activity
-            android:name="com.afc.biblereading.First"
+            android:name=".First"
             android:label="@string/title_acitvity_first" >
         </activity>
         <activity
-            android:name="com.afc.biblereading.Second"
+            android:name=".Second"
             android:label="@string/title_acitvity_second" >
         </activity>
-        <activity android:name="com.afc.biblereading.Tabs"></activity>
-        <activity android:name="com.afc.biblereading.Activity1"></activity>
-        <activity android:name="com.afc.biblereading.InfoActivity"></activity>
-        <activity android:name="com.afc.biblereading.Activity3"></activity>
-        <activity android:name="com.afc.biblereading.Activity4"></activity>
-        <receiver android:name="com.afc.biblereading.TimeAlarm" />
+        <activity android:name=".Tabs" >
+        </activity>
+        <activity android:name=".Activity1" >
+        </activity>
+        <activity android:name=".InfoActivity" >
+        </activity>
+        <activity android:name=".Activity3" >
+        </activity>
+        <activity android:name=".Activity4" >
+        </activity>
+
+        <receiver android:name=".TimeAlarm" />
+
+        <activity
+            android:name=".MemberInfoActivity"
+            android:label="@string/title_activity_member_info" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

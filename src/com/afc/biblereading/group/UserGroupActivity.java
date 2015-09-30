@@ -1,34 +1,26 @@
 package com.afc.biblereading.group;
 
+import static com.afc.biblereading.user.definitions.Consts.POSITION;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.CountDownLatch;
-
+import com.afc.biblereading.MemberInfoActivity;
 import com.afc.biblereading.R;
 import com.afc.biblereading.adapter.UserListAdapter;
-import com.afc.biblereading.adapter.UserLogListAdapter;
 import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.DialogUtils;
 import com.afc.biblereading.helper.util;
 import com.afc.biblereading.user.BaseActivity;
 import com.afc.biblereading.user.CreateSessionActivity;
-import com.afc.biblereading.user.UserActivity;
-import com.quickblox.core.QBCallback;
-import com.quickblox.core.QBCallbackImpl;
 import com.quickblox.core.QBEntityCallbackImpl;
-import com.quickblox.core.request.GenericQueryRule;
 import com.quickblox.core.request.QBPagedRequestBuilder;
-import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.customobjects.QBCustomObjects;
 import com.quickblox.customobjects.model.QBCustomObject;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,6 +29,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -75,6 +69,14 @@ public class UserGroupActivity extends BaseActivity {
         	createGroupLayout.setVisibility(View.GONE);
         	userGroupLayout.setVisibility(View.VISIBLE);
         	applyUserGroupInfo(userGroup.getName(), userGroup.getGroupSize());
+        	groupMemberListView.setOnItemClickListener(
+        			new OnItemClickListener(){
+        				@Override
+        				public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        					Log.v("user group activity", "click Item");
+        					startShowUserActivity(position);
+        				}
+        			});
         }		
         else{
         	createGroupLayout.setVisibility(View.VISIBLE);
@@ -91,6 +93,7 @@ public class UserGroupActivity extends BaseActivity {
     	QBUsers.getUsersByIDs(usersIds, pagedRequestBuilder, new QBEntityCallbackImpl<ArrayList<QBUser>>() {
     		@Override
             public void onSuccess(final ArrayList<QBUser> qbUsers, Bundle bundle) {
+    			DataHolder.getDataHolder().getSignInUserGroup().setMembersQB(qbUsers);
     	    	UserListAdapter memberAdapter = new UserListAdapter(context, R.layout.list_item_user, qbUsers);
     	    	groupMemberListView.setAdapter(memberAdapter); 
     	    }
@@ -148,28 +151,42 @@ public class UserGroupActivity extends BaseActivity {
 	    Log.v("before leave group", memberList.toString());
 	    memberList.remove(String.valueOf(currentUserId));
 	    Log.v("leave group", memberList.toString());
-	    
-	    QBCustomObject qbGroup = new QBCustomObject();
-	    qbGroup.setClassName("group");
-	    HashMap<String, Object> fields = new HashMap<String, Object>();
-	    fields.put("members", memberList);
-	    qbGroup.setFields(fields);
-	    qbGroup.setCustomObjectId(oldQBGroup.getCustomObjectId());
-	    QBCustomObjects.updateObject(qbGroup, new QBEntityCallbackImpl<QBCustomObject>() {
-	        @Override
-	        public void onSuccess(QBCustomObject newQBGroup, Bundle params) {
-	        	Group group = util.QBGroup2Group(newQBGroup);
-	        	DataHolder.getDataHolder().setSignInUserGroup(null);	
-	        	DataHolder.getDataHolder().setSignInUserQbGroup(null);
-	        	initUserGroup();
-	        }
-	     
-	        @Override
-	        public void onError(List<String> errors) {
-				DialogUtils.showLong(context, errors.get(0));			     
-	        }
-	    });
-		
+	    if (memberList.size() == 0){
+	    	QBCustomObjects.deleteObject("group", oldQBGroup.getCustomObjectId(), new QBEntityCallbackImpl<Object>() {
+	    		@Override
+		        public void onSuccess() {
+		        	DataHolder.getDataHolder().setSignInUserGroup(null);	
+		        	DataHolder.getDataHolder().setSignInUserQbGroup(null);
+		        	initUserGroup();
+		        }
+		     
+		        @Override
+		        public void onError(List<String> errors) {
+					DialogUtils.showLong(context, errors.get(0));			     
+		        }
+	    	});
+	    }
+	    else{
+	    	QBCustomObject qbGroup = new QBCustomObject();
+		    qbGroup.setClassName("group");
+		    HashMap<String, Object> fields = new HashMap<String, Object>();
+		    fields.put("members", memberList);
+		    qbGroup.setFields(fields);
+		    qbGroup.setCustomObjectId(oldQBGroup.getCustomObjectId());
+		    QBCustomObjects.updateObject(qbGroup, new QBEntityCallbackImpl<QBCustomObject>() {
+		        @Override
+		        public void onSuccess(QBCustomObject newQBGroup, Bundle params) {
+		        	DataHolder.getDataHolder().setSignInUserGroup(null);	
+		        	DataHolder.getDataHolder().setSignInUserQbGroup(null);
+		        	initUserGroup();
+		        }
+		     
+		        @Override
+		        public void onError(List<String> errors) {
+					DialogUtils.showLong(context, errors.get(0));			     
+		        }
+		    });
+	    }		
 	}
 	private void createGroup(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -235,4 +252,10 @@ public class UserGroupActivity extends BaseActivity {
             }, 3 * 1000);
         }
     }
+	
+	private void startShowUserActivity(int position) {
+        Intent intent = new Intent(this, MemberInfoActivity.class);
+        intent.putExtra(POSITION, position);
+        startActivity(intent);
+	}
 }
