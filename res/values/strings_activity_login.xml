@@ -12,7 +12,6 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
 
-    <string name="app_name">Sample Users</string>
     <string name="qb_slogan">YOUR COMMUNICATION \nBACKEND</string>
     <string name="name">Name</string>
     <string name="tags">Tags</string>
@@ -54,7 +53,6 @@
     <string name="dlg_cancel">Cancel</string>
     <string name="three_dots">…</string>
     <string name="reading_history">Reading History</string>
-    <string name="group_members">Group Members</string>
-    
+    <string name="group_members">Group Members</string>   
     
 </resources>

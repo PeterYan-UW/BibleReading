@@ -9,6 +9,8 @@ import org.joda.time.DateTime;
 
 import com.afc.biblereading.R;
 import com.afc.biblereading.helper.DataHolder;
+import com.afc.biblereading.helper.util;
+import com.afc.biblereading.user.BaseActivity;
 import com.afc.biblereading.user.CreateSessionActivity;
 import com.afc.biblereading.user.UserActivity;
 
@@ -29,7 +31,7 @@ import android.graphics.Typeface;
 import android.widget.TextView;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
 	public static final String PREFS_NAME = "MyPrefsFile";
 	public static DateTime startDate;
 	public static DateTime endDate;
@@ -38,7 +40,7 @@ public class MainActivity extends Activity {
 	LocalDataManage DOP;
 	
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
     	
         super.onCreate(savedInstanceState);
         DOP = ((ApplicationSingleton)getApplication()).getDataBase();
@@ -46,12 +48,14 @@ public class MainActivity extends Activity {
 		ArrayList<HashMap<String, Object>> result = DOP.getPlanInfo(DOP);
 		Log.d("database plan return", String.valueOf(result.size()));
 		Log.d("database plan return", result.toString());
-		
+
+    	Log.v("main activity", String.valueOf(result.size()));
         if (result.size()>0) {
         	Intent intent = new Intent(this, Tabs.class);
         	startActivity(intent);
         }
         else {
+        	Log.v("main activity", "go set date");
         	setContentView(R.layout.activity_main);
             
             Typeface face0 = Typeface.createFromAsset(getAssets(),"fonts/fonts1.TTF");
@@ -72,15 +76,6 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
-    @Override
-	protected void onResume(){
-		super.onResume();
-		if (DataHolder.getDataHolder().getSignInQbUser()== null){
-    		Intent user = new Intent(this, Tabs.class);
-    		startActivity(user);  			
-		}
-    }
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -100,8 +95,7 @@ public class MainActivity extends Activity {
     }
     
     public void startReading(View view){
-    	Intent intent = new Intent(this, Tabs.class);
-
+    	progressDialog.show();
 		// TODO: add space for plan name, default 'reading plan'+id, cant be empty"
 		String planName = "reading plan 1";
     	DatePicker StartDateValue = (DatePicker) findViewById(R.id.StartDateValue);
@@ -129,10 +123,18 @@ public class MainActivity extends Activity {
 	 	Log.v("first","notify");
 
 	 	alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 24*60*60*1000, pendingIntent);
-        
+
+    	Intent intent = new Intent(this, Tabs.class);
     	startActivity(intent);
     }
-    
+    @Override
+	protected void onResume(){
+		super.onResume();
+		if (DataHolder.getDataHolder().getSignInQbUser()== null && util.isNetworkAvailable(this)){
+    		Intent user = new Intent(this, CreateSessionActivity.class);
+    		startActivity(user);  			
+		}
+    }
 	private Boolean exit = false;
 	@Override
     public void onBackPressed() {

@@ -177,7 +177,7 @@ public class CalenderActivity extends FragmentActivity{
 	protected void onResume(){
 		super.onResume();
 		Log.v("calender activity", "resume");
-		if (DataHolder.getDataHolder().getSignInQbUser()== null){
+		if (DataHolder.getDataHolder().getSignInQbUser() == null && util.isNetworkAvailable(this)){
     		Intent user = new Intent(this, CreateSessionActivity.class);
     		startActivity(user);  			
 		}
