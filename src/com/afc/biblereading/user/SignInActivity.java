@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.afc.biblereading.MainActivity;
+import com.afc.biblereading.ScheduleActivity;
 import com.afc.biblereading.R;
 import com.afc.biblereading.group.Group;
 import com.afc.biblereading.helper.DataHolder;
@@ -86,7 +86,7 @@ public class SignInActivity extends BaseActivity {
 
 
     protected void startMainAcitvity() {
-		Intent main = new Intent(this, MainActivity.class);
+		Intent main = new Intent(this, ScheduleActivity.class);
 		startActivity(main);
 		finish();		
 	}

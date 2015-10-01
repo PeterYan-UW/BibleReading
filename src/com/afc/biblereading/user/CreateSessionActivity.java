@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afc.biblereading.MainActivity;
+import com.afc.biblereading.ScheduleActivity;
 import com.afc.biblereading.R;
 import com.afc.biblereading.group.Group;
 import com.afc.biblereading.group.UserGroupActivity;
@@ -145,7 +145,7 @@ public class CreateSessionActivity extends Activity{
     }
     
     private void startMain(){
-    	Intent intent = new Intent(this, MainActivity.class);
+    	Intent intent = new Intent(this, ScheduleActivity.class);
     	startActivity(intent);
     	finish();    	
     }

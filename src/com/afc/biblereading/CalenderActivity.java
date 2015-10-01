@@ -270,11 +270,11 @@ public class CalenderActivity extends FragmentActivity{
     
 
 	public void ResetDays(){
-		Intent backMain = new Intent(this, MainActivity.class);
+		Intent backMain = new Intent(this, ScheduleActivity.class);
 		LocalDataManage DOP = ((ApplicationSingleton)getApplication()).getDataBase();
 		DOP.DeletePlan(DOP);
 		
-		MainActivity.alarmManager.cancel(MainActivity.pendingIntent);
+		ScheduleActivity.alarmManager.cancel(ScheduleActivity.pendingIntent);
 		
     	startActivity(backMain);    	
     }

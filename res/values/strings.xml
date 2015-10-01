@@ -19,5 +19,6 @@
     <string name="group_text">小组</string>
     <string name="user_text">用户</string>
     <string name="title_activity_member_info">MemberInfoActivity</string>
+    <string name="title_activity_choose_book">ChooseBookActivity</string>
 
 </resources>

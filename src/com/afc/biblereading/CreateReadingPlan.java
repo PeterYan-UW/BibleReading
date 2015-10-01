@@ -1,30 +1,39 @@
 package com.afc.biblereading;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
-
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
-import android.content.Context;
 import android.util.Log;
 
 public class CreateReadingPlan {
 
-	private final static int TOTAL_BOOKS = 66;
-	private final static int TOTAL_CHAPTERS = 1189;
+	private static int TOTAL_BOOKS;
+	private static int TOTAL_CHAPTERS;
+	private static int startsFrom;
+	private static int endsAt;
 
 	private final static BibleIndex Bibleindex = new BibleIndex();
-	public static void CreatePlan(LocalDataManage DOP, String planName, DateTime startDate,
-			DateTime endDate, MainActivity context) {
-		//TODO: need to gen uniqu plan id
+	
+	public static void CreatePlan(LocalDataManage DOP, String planName, 
+			int beginBook, int endBook, DateTime startDate, DateTime endDate, 
+			ScheduleActivity context) {
+		startsFrom = beginBook;
+		endsAt = endBook;
+		TOTAL_BOOKS = endBook-beginBook + 1;
+		TOTAL_CHAPTERS = 0;
+		for (int i=beginBook; i<=endBook; i++){
+			TOTAL_CHAPTERS += Bibleindex.BibleChapterNum[i];
+		}
 		int planId = 0;
-		DOP.AddPlan(DOP, 0, planName, startDate, endDate);
+		DOP.AddPlan(DOP, planId, planName, startDate, endDate);
         int totalReadingDays = 
         		Days.daysBetween(startDate, endDate).getDays()+1;
-        
+
+        Log.v("create plan",Integer.toString(beginBook));
+        Log.v("create plan",Integer.toString(endBook));
+        Log.v("create plan",Integer.toString(TOTAL_BOOKS));
+        Log.v("create plan",Integer.toString(TOTAL_CHAPTERS));
+
         Log.v(Integer.toString(totalReadingDays),"timetime");
         Log.v(Integer.toString(TOTAL_CHAPTERS/totalReadingDays),"Chapter");
         Log.v(Integer.toString(TOTAL_CHAPTERS%totalReadingDays),"remainder");
@@ -39,7 +48,7 @@ public class CreateReadingPlan {
         int backUpdailyChapters = dailyChapters;
         int remainderChapters = TOTAL_CHAPTERS%totalReadingDays;
         
-        int StartBook = 0;
+        int StartBook = startsFrom;
         int StartChapter = 1;
         int EndBook = 0;
         int EndChapter = 1;
@@ -52,7 +61,7 @@ public class CreateReadingPlan {
         	else {
         		dailyChapters = backUpdailyChapters - 1; 
         	}
-    		for (int CurrentBook=StartBook; CurrentBook < TOTAL_BOOKS; CurrentBook++) {
+    		for (int CurrentBook=StartBook; CurrentBook <= endsAt; CurrentBook++) {
     			int CurrentBookChaptersNum = Bibleindex.BibleChapterNum[StartBook];
     			if (CurrentBookChaptersNum-StartChapter >= dailyChapters) {
     				EndBook = StartBook;
@@ -71,8 +80,7 @@ public class CreateReadingPlan {
     				DOP.AddTask(DOP, planId, CurrentDay, CurrentBook, StartChapter, EndChapter);
     				dailyChapters = dailyChapters - (EndChapter-StartChapter) - 1;
     				StartBook++;
-    				StartChapter = 1;
-    				
+    				StartChapter = 1;    				
     			}
     		}
         }
