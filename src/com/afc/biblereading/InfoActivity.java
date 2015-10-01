@@ -3,6 +3,7 @@ package com.afc.biblereading;
 
 
 import com.afc.biblereading.helper.DataHolder;
+import com.afc.biblereading.helper.util;
 import com.afc.biblereading.user.CreateSessionActivity;
 
 import android.app.Activity;
@@ -22,7 +23,7 @@ public class InfoActivity extends Activity {
     @Override
     public void onResume(){
 		super.onResume(); 
-		if (DataHolder.getDataHolder().getSignInQbUser()== null){
+		if (DataHolder.getDataHolder().getSignInQbUser()== null && util.isNetworkAvailable(this)){
     		Intent user = new Intent(this, CreateSessionActivity.class);
     		startActivity(user);  			
 		}

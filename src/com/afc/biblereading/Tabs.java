@@ -3,6 +3,7 @@ package com.afc.biblereading;
 
 
 import com.afc.biblereading.group.UserGroupActivity;
+import com.afc.biblereading.helper.util;
 import com.afc.biblereading.user.UserActivity;
 
 import android.app.LocalActivityManager;
@@ -24,7 +25,6 @@ public class Tabs extends TabActivity{
         setContentView(R.layout.activity_tabs);
        
         main_radiogroup = (RadioGroup) findViewById(R.id.main_radiogroup);
-        
         tab_icon_weixin = (RadioButton) findViewById(R.id.tab_icon_task);
         tab_icon_address = (RadioButton) findViewById(R.id.tab_icon_info);
         tab_icon_friend = (RadioButton) findViewById(R.id.tab_icon_group);
@@ -33,8 +33,14 @@ public class Tabs extends TabActivity{
         tabhost = getTabHost();
         tabhost.addTab(tabhost.newTabSpec("tag1").setIndicator("0").setContent(new Intent(this,CalenderActivity.class)));
         tabhost.addTab(tabhost.newTabSpec("tag2").setIndicator("1").setContent(new Intent(this,InfoActivity.class)));
-        tabhost.addTab(tabhost.newTabSpec("tag3").setIndicator("2").setContent(new Intent(this,UserGroupActivity.class)));
-        tabhost.addTab(tabhost.newTabSpec("tag4").setIndicator("3").setContent(new Intent(this,UserActivity.class)));
+        if (util.isNetworkAvailable(this)){
+	        tabhost.addTab(tabhost.newTabSpec("tag3").setIndicator("2").setContent(new Intent(this,UserGroupActivity.class)));
+	        tabhost.addTab(tabhost.newTabSpec("tag4").setIndicator("3").setContent(new Intent(this,UserActivity.class)));
+        }
+        else{
+        	tab_icon_friend.setEnabled(false);
+        	tab_icon_setting.setEnabled(false);
+        }
          
         checkListener checkradio = new checkListener();
         main_radiogroup.setOnCheckedChangeListener(checkradio);

@@ -6,13 +6,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afc.biblereading.MainActivity;
+import com.afc.biblereading.ScheduleActivity;
 import com.afc.biblereading.R;
 import com.afc.biblereading.group.Group;
 import com.afc.biblereading.group.UserGroupActivity;
@@ -49,79 +50,84 @@ public class CreateSessionActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_start);
         context = this;
-
-        initUI();
-
-        // Initialize QuickBlox application with credentials.
-        //
-        QBSettings.getInstance().fastConfigInit(APP_ID, AUTH_KEY, AUTH_SECRET);
-
-        // Create QuickBlox session
-        //
-        SharedPreferences user = getSharedPreferences(PREFS_NAME, 0);
-        String email = user.getString("email", null);
-        String passwd = user.getString("passwd", null);
-        if (email!=null && passwd !=null){
-            progressBar.setVisibility(View.VISIBLE);
-        	QBUser keeped = new QBUser(null, passwd, email);
-            QBAuth.createSession(keeped, new QBEntityCallbackImpl<QBSession>() {
-                @Override
-                public void onSuccess(QBSession qbSession, Bundle bundle) {
-                	int id = qbSession.getUserId();
-                	QBUsers.getUser(id, new QBEntityCallbackImpl<QBUser>() {
-	                    @Override
-	                    public void onSuccess(QBUser qbUser, Bundle bundle) {
+        if (util.isNetworkAvailable(context)){
+	        initUI();
 	
-	                        setResult(RESULT_OK);
+	        // Initialize QuickBlox application with credentials.
+	        //
+	        QBSettings.getInstance().fastConfigInit(APP_ID, AUTH_KEY, AUTH_SECRET);
 	
-	                        DataHolder.getDataHolder().setSignInQbUser(qbUser);
-	                        checkUserGroup(qbUser);
-	                        startMain();
-	                    }
+	        // Create QuickBlox session
+	        //
+	        SharedPreferences user = getSharedPreferences(PREFS_NAME, 0);
+	        String email = user.getString("email", null);
+	        String passwd = user.getString("passwd", null);
+	        if (email!=null && passwd !=null){
+	            progressBar.setVisibility(View.VISIBLE);
+	        	QBUser keeped = new QBUser(null, passwd, email);
+	            QBAuth.createSession(keeped, new QBEntityCallbackImpl<QBSession>() {
+	                @Override
+	                public void onSuccess(QBSession qbSession, Bundle bundle) {
+	                	int id = qbSession.getUserId();
+	                	QBUsers.getUser(id, new QBEntityCallbackImpl<QBUser>() {
+		                    @Override
+		                    public void onSuccess(QBUser qbUser, Bundle bundle) {
+		
+		                        setResult(RESULT_OK);
+		
+		                        DataHolder.getDataHolder().setSignInQbUser(qbUser);
+		                        checkUserGroup(qbUser);
+		                        startMain();
+		                    }
+		
+							@Override
+		                    public void onError(List<String> errors) {
+		                        DialogUtils.showLong(context, errors.get(0));
+		                        SharedPreferences user = getSharedPreferences(PREFS_NAME, 0);
+		                        SharedPreferences.Editor editor = user.edit();
+		                        editor.putString("email", null);
+		                        editor.putString("passwd", null);
+		                        editor.commit();
+		                        onCreate(savedInstanceState);
+		                    }
+	                	});
+	                }
 	
-						@Override
-	                    public void onError(List<String> errors) {
-	                        DialogUtils.showLong(context, errors.get(0));
-	                        SharedPreferences user = getSharedPreferences(PREFS_NAME, 0);
-	                        SharedPreferences.Editor editor = user.edit();
-	                        editor.putString("email", null);
-	                        editor.putString("passwd", null);
-	                        editor.commit();
-	                        onCreate(savedInstanceState);
-	                    }
-                	});
-                }
-
-                @Override
-                public void onError(List<String> errors) {
-                    // print errors that came from server
-                    DialogUtils.showLong(context, errors.get(0));
-                    SharedPreferences user = getSharedPreferences(PREFS_NAME, 0);
-                    SharedPreferences.Editor editor = user.edit();
-                    editor.putString("email", null);
-                    editor.putString("passwd", null);
-                    editor.commit();
-                    onCreate(savedInstanceState);
-                }
-            });
-        	
+	                @Override
+	                public void onError(List<String> errors) {
+	                    // print errors that came from server
+	                    DialogUtils.showLong(context, errors.get(0));
+	                    SharedPreferences user = getSharedPreferences(PREFS_NAME, 0);
+	                    SharedPreferences.Editor editor = user.edit();
+	                    editor.putString("email", null);
+	                    editor.putString("passwd", null);
+	                    editor.commit();
+	                    onCreate(savedInstanceState);
+	                }
+	            });
+	        	
+	        }
+	        else {
+	            QBAuth.createSession(new QBEntityCallbackImpl<QBSession>() {
+	                @Override
+	                public void onSuccess(QBSession qbSession, Bundle bundle) {
+	                	askLogin.setVisibility(View.VISIBLE);
+	                	signInButton.setVisibility(View.VISIBLE);
+	                	signUpButton.setVisibility(View.VISIBLE);
+	                }
+	
+	                @Override
+	                public void onError(List<String> errors) {
+	                    // print errors that came from server
+	                    DialogUtils.showLong(context, errors.get(0));
+	                    progressBar.setVisibility(View.INVISIBLE);
+	                }
+	            });
+	        }
         }
-        else {
-            QBAuth.createSession(new QBEntityCallbackImpl<QBSession>() {
-                @Override
-                public void onSuccess(QBSession qbSession, Bundle bundle) {
-                	askLogin.setVisibility(View.VISIBLE);
-                	signInButton.setVisibility(View.VISIBLE);
-                	signUpButton.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onError(List<String> errors) {
-                    // print errors that came from server
-                    DialogUtils.showLong(context, errors.get(0));
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
-            });
+        else{
+        	Log.v("no network", "pass");
+        	startMain();
         }
     }
 
@@ -139,7 +145,7 @@ public class CreateSessionActivity extends Activity{
     }
     
     private void startMain(){
-    	Intent intent = new Intent(this, MainActivity.class);
+    	Intent intent = new Intent(this, ScheduleActivity.class);
     	startActivity(intent);
     	finish();    	
     }

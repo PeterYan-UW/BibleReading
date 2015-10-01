@@ -177,7 +177,7 @@ public class CalenderActivity extends FragmentActivity{
 	protected void onResume(){
 		super.onResume();
 		Log.v("calender activity", "resume");
-		if (DataHolder.getDataHolder().getSignInQbUser()== null){
+		if (DataHolder.getDataHolder().getSignInQbUser() == null && util.isNetworkAvailable(this)){
     		Intent user = new Intent(this, CreateSessionActivity.class);
     		startActivity(user);  			
 		}
@@ -270,11 +270,11 @@ public class CalenderActivity extends FragmentActivity{
     
 
 	public void ResetDays(){
-		Intent backMain = new Intent(this, MainActivity.class);
+		Intent backMain = new Intent(this, ScheduleActivity.class);
 		LocalDataManage DOP = ((ApplicationSingleton)getApplication()).getDataBase();
 		DOP.DeletePlan(DOP);
 		
-		MainActivity.alarmManager.cancel(MainActivity.pendingIntent);
+		ScheduleActivity.alarmManager.cancel(ScheduleActivity.pendingIntent);
 		
     	startActivity(backMain);    	
     }
