@@ -25,17 +25,9 @@ public class TimeAlarm extends BroadcastReceiver {
 		// Request the notification manager
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		// Create a new intent which will be fired if you click on the notification
-<<<<<<< HEAD
-
 		Intent intent = new Intent(context,Tabs.class);
 
 		//intent.setData(Uri.parse("http://www.papers.ch"));
-
-
-=======
-		Intent intent = new Intent("android.intent.action.VIEW");
-		intent.setData(Uri.parse("http://www.papers.ch"));
->>>>>>> Dev
 		// Attach the intent to a pending intent
 		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 		// Create the notification
