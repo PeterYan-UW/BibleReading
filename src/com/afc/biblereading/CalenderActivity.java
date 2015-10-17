@@ -161,7 +161,6 @@ public class CalenderActivity extends FragmentActivity{
 			    int position, long id) {
 				  	index = position;
 				  	Task task = (Task) parent.getItemAtPosition(position);
-				  	
 				  	Toast.makeText(getApplicationContext(),
 				  			"Clicked on Row: " + task.asString(),
 				  			Toast.LENGTH_LONG).show();
@@ -169,7 +168,6 @@ public class CalenderActivity extends FragmentActivity{
 				  	refreshCalender();
 			  }
 		});
-		
 	}
 
 	@Override
