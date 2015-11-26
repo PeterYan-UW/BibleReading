@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.joda.time.DateTime;
-
 import com.afc.biblereading.R;
 import com.afc.biblereading.adapter.CustomCheckboxAdapter;
 import com.afc.biblereading.calender.CaldroidCustomFragment;
@@ -162,7 +161,6 @@ public class CalenderActivity extends FragmentActivity{
 			    int position, long id) {
 				  	index = position;
 				  	Task task = (Task) parent.getItemAtPosition(position);
-				  	
 				  	Toast.makeText(getApplicationContext(),
 				  			"Clicked on Row: " + task.asString(),
 				  			Toast.LENGTH_LONG).show();
@@ -170,7 +168,6 @@ public class CalenderActivity extends FragmentActivity{
 				  	refreshCalender();
 			  }
 		});
-		
 	}
 
 	@Override
@@ -183,6 +180,7 @@ public class CalenderActivity extends FragmentActivity{
 		}
 		refreshCalender();
 		SetCheckingButton();
+		setTodayTask();
 	}
 	
 	private void refreshCalender(){
@@ -201,7 +199,6 @@ public class CalenderActivity extends FragmentActivity{
 			}
 		}
 		Log.v(Integer.toString(unfinish),"exist");
-		
 	}
 
 	/**

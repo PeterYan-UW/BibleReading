@@ -18,7 +18,13 @@
     <string name="info_text">信息</string>
     <string name="group_text">小组</string>
     <string name="user_text">用户</string>
+    <string name="search_by_email">用户邮箱</string>
     <string name="title_activity_member_info">MemberInfoActivity</string>
     <string name="title_activity_choose_book">ChooseBookActivity</string>
+    <string name="title_activity_user_group_list">UserGroupListActivity</string>
+    <string name="invite_friend">Invite Friend</string>
+    <string name="title_activity_search_user">SearchUserActivity</string>
+    <string name="no_match_eamil">此用户不存在</string>
+    <string name="send_invitation">邀请</string>
 
 </resources>

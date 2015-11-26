@@ -8,15 +8,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afc.biblereading.ScheduleActivity;
 import com.afc.biblereading.R;
 import com.afc.biblereading.group.Group;
-import com.afc.biblereading.group.UserGroupActivity;
 import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.DialogUtils;
 import com.afc.biblereading.helper.util;
@@ -41,18 +38,15 @@ import static com.afc.biblereading.user.definitions.Consts.PREFS_NAME;
 public class CreateSessionActivity extends Activity{
     private Context context;
     private ProgressBar progressBar;
-    private TextView askLogin;
-    private Button signInButton;
-    private Button signUpButton;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_start);
         context = this;
+        initUI();
+        progressBar.setVisibility(View.VISIBLE);
         if (util.isNetworkAvailable(context)){
-	        initUI();
-	
 	        // Initialize QuickBlox application with credentials.
 	        //
 	        QBSettings.getInstance().fastConfigInit(APP_ID, AUTH_KEY, AUTH_SECRET);
@@ -63,7 +57,6 @@ public class CreateSessionActivity extends Activity{
 	        String email = user.getString("email", null);
 	        String passwd = user.getString("passwd", null);
 	        if (email!=null && passwd !=null){
-	            progressBar.setVisibility(View.VISIBLE);
 	        	QBUser keeped = new QBUser(null, passwd, email);
 	            QBAuth.createSession(keeped, new QBEntityCallbackImpl<QBSession>() {
 	                @Override
@@ -111,9 +104,7 @@ public class CreateSessionActivity extends Activity{
 	            QBAuth.createSession(new QBEntityCallbackImpl<QBSession>() {
 	                @Override
 	                public void onSuccess(QBSession qbSession, Bundle bundle) {
-	                	askLogin.setVisibility(View.VISIBLE);
-	                	signInButton.setVisibility(View.VISIBLE);
-	                	signUpButton.setVisibility(View.VISIBLE);
+	                	startSignIn();
 	                }
 	
 	                @Override
@@ -133,14 +124,11 @@ public class CreateSessionActivity extends Activity{
 
     private void initUI() {
     	progressBar = (ProgressBar) findViewById(R.id.login_progress);
-        signInButton = (Button) findViewById(R.id.sign_in_button);
-        signUpButton = (Button) findViewById(R.id.sign_up_button);
-    	askLogin = (TextView) findViewById(R.id.no_user);
     }
     
-    private void startLogin(){
-    	Intent intent = new Intent(this, UserActivity.class);
-    	startActivity(intent);
+    private void startSignIn(){
+    	Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
     	finish();    	
     }
     
@@ -160,9 +148,9 @@ public class CreateSessionActivity extends Activity{
     			// Logically each user can only join one group
     			// So the condition should be (groups.size() == 1)
     			if (groups.size() >= 1){
-    				Group userGroup = util.QBGroup2Group(groups.get(0));
+    				ArrayList<Group> userGroup = util.QBGroups2Groups(groups);
     				DataHolder.getDataHolder().setSignInUserGroup(userGroup);
-    				DataHolder.getDataHolder().setSignInUserQbGroup(groups.get(0));
+    				DataHolder.getDataHolder().setSignInUserQbGroup(groups);
     			}
 			}
 			
@@ -172,20 +160,6 @@ public class CreateSessionActivity extends Activity{
 			}
     	});
 	}
-    
-    public void onClick(View view) {
-        Intent intent;
-        switch (view.getId()) {
-            case R.id.sign_in_button:
-                intent = new Intent(this, SignInActivity.class);
-                startActivityForResult(intent, 0);
-                break;
-            case R.id.sign_up_button:
-                intent = new Intent(this, SignUpUserActivity.class);
-                startActivity(intent);
-                break;
-        }
-    }
     
 	private Boolean exit = false;
 	@Override

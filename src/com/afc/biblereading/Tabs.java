@@ -2,7 +2,8 @@ package com.afc.biblereading;
 
 
 
-import com.afc.biblereading.group.UserGroupActivity;
+import com.afc.biblereading.group.ShowUserGroupActivity;
+import com.afc.biblereading.group.UserGroupListActivity;
 import com.afc.biblereading.helper.util;
 import com.afc.biblereading.user.UserActivity;
 
@@ -34,7 +35,7 @@ public class Tabs extends TabActivity{
         tabhost.addTab(tabhost.newTabSpec("tag1").setIndicator("0").setContent(new Intent(this,CalenderActivity.class)));
         tabhost.addTab(tabhost.newTabSpec("tag2").setIndicator("1").setContent(new Intent(this,InfoActivity.class)));
         if (util.isNetworkAvailable(this)){
-	        tabhost.addTab(tabhost.newTabSpec("tag3").setIndicator("2").setContent(new Intent(this,UserGroupActivity.class)));
+	        tabhost.addTab(tabhost.newTabSpec("tag3").setIndicator("2").setContent(new Intent(this,UserGroupListActivity.class)));
 	        tabhost.addTab(tabhost.newTabSpec("tag4").setIndicator("3").setContent(new Intent(this,UserActivity.class)));
         }
         else{

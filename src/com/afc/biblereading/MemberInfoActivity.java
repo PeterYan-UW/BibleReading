@@ -1,6 +1,7 @@
 package com.afc.biblereading;
 
 import static com.afc.biblereading.user.definitions.Consts.POSITION;
+import static com.afc.biblereading.user.definitions.Consts.GROUP_POSITION;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,8 @@ public class MemberInfoActivity extends BaseActivity {
     private TextView emailTextView;
     private TextView fullNameTextView;
     private ListView memberLogListView;
-    private int position;
+    private int member_position;
+    private int group_position;
     
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,12 +45,14 @@ public class MemberInfoActivity extends BaseActivity {
 		initUI();
 	    Bundle extras = getIntent().getExtras();
 	    if(extras == null) {
-	    	position= -1;
+	    	member_position = -1;
+	    	group_position = -1;
 	    } else {
-	    	position= extras.getInt(POSITION);
+	    	member_position= extras.getInt(POSITION);
+	    	group_position= extras.getInt(GROUP_POSITION);
 	    }
-	    ArrayList<QBUser> members = DataHolder.getDataHolder().getSignInUserGroup().getMembersQB();
-	    QBUser member = members.get(position);
+	    ArrayList<QBUser> members = DataHolder.getDataHolder().getSignInUserGroup(group_position).getMembersQB();
+	    QBUser member = members.get(member_position);
 	    applyMemberInfo(member);
 	}
 	

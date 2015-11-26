@@ -2,10 +2,13 @@ package com.afc.biblereading.user;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.afc.biblereading.ScheduleActivity;
 import com.afc.biblereading.R;
@@ -30,6 +33,7 @@ public class SignInActivity extends BaseActivity {
     private EditText emailEditText;
     private EditText passwordEditText;
     private CheckBox stayLoginCheckBox;
+    private TextView signup;
 
     @Override
     public void onCreate(Bundle savedInstanceBundle) {
@@ -42,6 +46,8 @@ public class SignInActivity extends BaseActivity {
         emailEditText = (EditText) findViewById(R.id.email_edittext);
         passwordEditText = (EditText) findViewById(R.id.password_edittext);
         stayLoginCheckBox = (CheckBox) findViewById(R.id.stay_login);
+        signup = (TextView)findViewById(R.id.Sign_up); 
+        signup.getPaint().setFlags(Paint. UNDERLINE_TEXT_FLAG );
     }
 
     public void onClick(View view) {
@@ -81,6 +87,11 @@ public class SignInActivity extends BaseActivity {
                 });
                 progressDialog.hide();
                 break;
+            case R.id.Sign_up:
+            	Intent intent = new Intent(this, SignUpUserActivity.class);
+                startActivity(intent);
+                break;
+            	
         }
     }
 
@@ -100,9 +111,9 @@ public class SignInActivity extends BaseActivity {
     			// Logically each user can only join one group
     			// So the condition should be (groups.size() == 1)
     			if (groups.size() >= 1){
-    				Group userGroup = util.QBGroup2Group(groups.get(0));
+    				ArrayList<Group> userGroup = util.QBGroups2Groups(groups);
     				DataHolder.getDataHolder().setSignInUserGroup(userGroup);
-    				DataHolder.getDataHolder().setSignInUserQbGroup(groups.get(0));
+    				DataHolder.getDataHolder().setSignInUserQbGroup(groups);
     			}	
 			}
 			

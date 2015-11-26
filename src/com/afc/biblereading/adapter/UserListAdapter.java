@@ -24,14 +24,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import org.xmlpull.v1.XmlPullParser;
+
 public class UserListAdapter extends ArrayAdapter<QBUser> {
 	private ArrayList<QBUser> memberList;
 
+    private int resource;
     public UserListAdapter(Context context, int resource, 
 			ArrayList<QBUser> memberList) {
     	super(context, resource, memberList);
     	this.memberList = new ArrayList<QBUser>();
     	this.memberList = memberList;
+    	this.resource = resource;
     }
 	
 	private class ViewHolder {
@@ -47,7 +51,7 @@ public class UserListAdapter extends ArrayAdapter<QBUser> {
         if (convertView == null) {
 			LayoutInflater vi = (LayoutInflater)getContext().getSystemService(
 					Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.list_item_user, null);
+			convertView = vi.inflate(resource, null);
             viewHolder = new ViewHolder();
             viewHolder.userName = (TextView) convertView.findViewById(
             		R.id.user_name_textview);

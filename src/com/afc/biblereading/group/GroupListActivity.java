@@ -44,7 +44,7 @@ public class GroupListActivity extends Activity implements AdapterView.OnItemCli
         Intent intent = new Intent(this, ShowGroupActivity.class);
         intent.putExtra(POSITION, position);
         startActivity(intent);
-        if (DataHolder.getDataHolder().getSignInUserGroup()!=null){
+        if (DataHolder.getDataHolder().getSignInUserGroup(0)!=null){
         	finish();
         }
     }
