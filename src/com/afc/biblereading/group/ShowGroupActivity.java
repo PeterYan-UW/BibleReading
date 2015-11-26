@@ -97,8 +97,8 @@ public class ShowGroupActivity extends BaseActivity {
 	        @Override
 	        public void onSuccess(QBCustomObject newQBGroup, Bundle params) {
 	        	Group group = util.QBGroup2Group(newQBGroup);
-	        	DataHolder.getDataHolder().setSignInUserGroup(group);	
-	        	DataHolder.getDataHolder().setSignInUserQbGroup(newQBGroup);	 
+	        	DataHolder.getDataHolder().addSignInUserGroup(group);	
+	        	DataHolder.getDataHolder().addSignInUserQbGroup(newQBGroup);	 
 	        	backToUserGroupsActivity();
 	        }
 	     

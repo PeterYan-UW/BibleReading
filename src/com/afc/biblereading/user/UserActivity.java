@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.afc.biblereading.R;
 import com.afc.biblereading.adapter.UserLogListAdapter;
-import com.afc.biblereading.group.UserGroupActivity;
+import com.afc.biblereading.group.ShowUserGroupActivity;
 import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.DialogUtils;
 import com.quickblox.core.QBEntityCallbackImpl;

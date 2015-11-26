@@ -111,9 +111,9 @@ public class SignInActivity extends BaseActivity {
     			// Logically each user can only join one group
     			// So the condition should be (groups.size() == 1)
     			if (groups.size() >= 1){
-    				Group userGroup = util.QBGroup2Group(groups.get(0));
+    				ArrayList<Group> userGroup = util.QBGroups2Groups(groups);
     				DataHolder.getDataHolder().setSignInUserGroup(userGroup);
-    				DataHolder.getDataHolder().setSignInUserQbGroup(groups.get(0));
+    				DataHolder.getDataHolder().setSignInUserQbGroup(groups);
     			}	
 			}
 			

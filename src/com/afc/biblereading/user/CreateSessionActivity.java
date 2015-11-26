@@ -8,15 +8,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afc.biblereading.ScheduleActivity;
 import com.afc.biblereading.R;
 import com.afc.biblereading.group.Group;
-import com.afc.biblereading.group.UserGroupActivity;
 import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.DialogUtils;
 import com.afc.biblereading.helper.util;
@@ -151,9 +148,9 @@ public class CreateSessionActivity extends Activity{
     			// Logically each user can only join one group
     			// So the condition should be (groups.size() == 1)
     			if (groups.size() >= 1){
-    				Group userGroup = util.QBGroup2Group(groups.get(0));
+    				ArrayList<Group> userGroup = util.QBGroups2Groups(groups);
     				DataHolder.getDataHolder().setSignInUserGroup(userGroup);
-    				DataHolder.getDataHolder().setSignInUserQbGroup(groups.get(0));
+    				DataHolder.getDataHolder().setSignInUserQbGroup(groups);
     			}
 			}
 			

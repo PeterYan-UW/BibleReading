@@ -53,6 +53,6 @@
     <string name="dlg_cancel">Cancel</string>
     <string name="three_dots">…</string>
     <string name="reading_history">Reading History</string>
-    <string name="group_members">Group Members</string>   
+    <string name="group_members">Group Members:</string>   
     
 </resources>

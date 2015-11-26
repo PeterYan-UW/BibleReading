@@ -38,9 +38,9 @@ public class CaldroidCustomAdapter extends CaldroidGridAdapter {
 		int leftPadding = cellView.getPaddingLeft();
 		int rightPadding = cellView.getPaddingRight();
 
-		TextView tv1 = (TextView) cellView.findViewById(R.id.tv1);
+		TextView date = (TextView) cellView.findViewById(R.id.date);
 
-		tv1.setTextColor(Color.BLACK);
+		date.setTextColor(Color.BLACK);
 
 		// Get dateTime of this cell
 		DateTime dateTime = this.datetimeList.get(position);
@@ -48,7 +48,7 @@ public class CaldroidCustomAdapter extends CaldroidGridAdapter {
 
 		// Set color of the dates in previous / next month
 		if (dateTime.getMonth() != month) {
-			tv1.setTextColor(resources
+			date.setTextColor(resources
 					.getColor(com.caldroid.R.color.caldroid_darker_gray));
 		}
 
@@ -60,7 +60,7 @@ public class CaldroidCustomAdapter extends CaldroidGridAdapter {
 				|| (maxDateTime != null && dateTime.gt(maxDateTime))
 				|| (disableDates != null && disableDates.indexOf(dateTime) != -1)) {
 
-			tv1.setTextColor(CaldroidFragment.disabledTextColor);
+			date.setTextColor(CaldroidFragment.disabledTextColor);
 			if (CaldroidFragment.disabledBackgroundDrawable == -1) {
 				cellView.setBackgroundResource(com.caldroid.R.drawable.disable_cell);
 			} else {
@@ -84,7 +84,7 @@ public class CaldroidCustomAdapter extends CaldroidGridAdapter {
 						.getColor(com.caldroid.R.color.caldroid_sky_blue));
 			}
 
-			tv1.setTextColor(CaldroidFragment.selectedTextColor);
+			date.setTextColor(CaldroidFragment.selectedTextColor);
 
 		} else {
 			shouldResetSelectedView = true;
@@ -99,7 +99,7 @@ public class CaldroidCustomAdapter extends CaldroidGridAdapter {
 			}
 		}
 
-		tv1.setText("" + dateTime.getDay());
+		date.setText("" + dateTime.getDay());
 
 		// Somehow after setBackgroundResource, the padding collapse.
 		// This is to recover the padding
@@ -107,7 +107,7 @@ public class CaldroidCustomAdapter extends CaldroidGridAdapter {
 				0);
 
 		// Set custom color if required
-		setCustomResources(dateTime, cellView, tv1);
+		setCustomResources(dateTime, cellView, date);
 
 		return cellView;
 	}
