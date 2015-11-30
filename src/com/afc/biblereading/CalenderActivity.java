@@ -8,12 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.joda.time.DateTime;
+
 import com.afc.biblereading.R;
 import com.afc.biblereading.adapter.CustomCheckboxAdapter;
 import com.afc.biblereading.calender.CaldroidCustomFragment;
 import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.util;
 import com.afc.biblereading.user.CreateSessionActivity;
+import com.afc.biblereading.user.SignInActivity;
 import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.customobjects.QBCustomObjects;
 import com.quickblox.customobjects.model.QBCustomObject;
@@ -24,6 +26,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,6 +45,7 @@ import android.widget.Toast;
 
 @SuppressLint("SimpleDateFormat")
 public class CalenderActivity extends FragmentActivity{
+	public static final String PREFS_NAME = "MyPrefsFile";
 	private boolean undo = false;
 	LocalDataManage DOP;
 	private Date startDay = null;
@@ -52,6 +56,7 @@ public class CalenderActivity extends FragmentActivity{
 	public static Date targetDay;
 	ArrayList<Task> todayTaskList;
 	public static int unfinish = 0;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +128,7 @@ public class CalenderActivity extends FragmentActivity{
 
 	private void SetCheckingButton() {
 		if (DataHolder.getDataHolder().getSignInQbUser()!=null){
-			findViewById(R.id.CheckInTodayTask).setEnabled(true);;
+			findViewById(R.id.RestDay).setEnabled(true);;
 		}
 	}
 
@@ -313,36 +318,48 @@ public class CalenderActivity extends FragmentActivity{
 	
 	public void onClick(View view){
         switch (view.getId()) {
-	        case R.id.CheckInTodayTask:
-	        	if (DataHolder.getDataHolder().getSignInQbUser() != null){
-		        	ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
-		        	ArrayList<Task> converTodayTask = util.DBTasks2Tasks(todayTask);
-		        	String finished = "读完";
-		        	int total = converTodayTask.size();
-		        	int miss = 0;
-		        	for (Task t : converTodayTask){
-		        		if (t.getDone()){
-		        			finished += t.asString()+" ";
-		        		}
-		        		else{
-		        			miss++;
-		        		}
-		        	}
-		        	final String checkInString = util.GenCheckInMessage(total, miss, finished);
-		        	final Boolean status = (miss==0);
-		    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		    		builder.setTitle("发表一下信息到小组");
-		    		builder.setMessage(checkInString);
-		    		builder.setPositiveButton("发表", new DialogInterface.OnClickListener() {
-		    			@Override
-		    			public void onClick(DialogInterface dialogInterface, int i) {
-		    				checkInTodayTask(checkInString, status);
-		    			}
-		    		});
-		    		builder.setNegativeButton("取消",null);
-		    		builder.create().show();
-	        	}
-	    		break;
+//	        case R.id.CheckInTodayTask:
+//	        	if (DataHolder.getDataHolder().getSignInQbUser() != null){
+//		        	ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
+//		        	ArrayList<Task> converTodayTask = util.DBTasks2Tasks(todayTask);
+//		        	String finished = "读完";
+//		        	int total = converTodayTask.size();
+//		        	int miss = 0;
+//		        	for (Task t : converTodayTask){
+//		        		if (t.getDone()){
+//		        			finished += t.asString()+" ";
+//		        		}
+//		        		else{
+//		        			miss++;
+//		        		}
+//		        	}
+//		        	final String checkInString = util.GenCheckInMessage(total, miss, finished);
+//		        	final Boolean status = (miss==0);
+//		    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//		    		builder.setTitle("发表一下信息到小组");
+//		    		builder.setMessage(checkInString);
+//		    		builder.setPositiveButton("发表", new DialogInterface.OnClickListener() {
+//		    			@Override
+//		    			public void onClick(DialogInterface dialogInterface, int i) {
+//		    				checkInTodayTask(checkInString, status);
+//		    			}
+//		    		});
+//		    		builder.setNegativeButton("取消",null);
+//		    		builder.create().show();
+//	        	}
+//	    		break;
+	        case R.id.RestDay:
+	        	Intent backMain = new Intent(this, ScheduleActivity.class);
+	    		LocalDataManage DOP = ((ApplicationSingleton)getApplication()).getDataBase();
+	    		DOP.DeletePlan(DOP);
+	    		
+	    		SharedPreferences alarm = getSharedPreferences(PREFS_NAME, 0);
+	            SharedPreferences.Editor editor = alarm.edit();
+            	editor.putString("checkout", "Yes");
+            	editor.commit();
+	    		
+	        	startActivity(backMain);    	
+	        	break;
         }
 	}
 	

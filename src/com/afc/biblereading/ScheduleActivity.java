@@ -1,5 +1,7 @@
 package com.afc.biblereading;
 
+import static com.afc.biblereading.user.definitions.Consts.PREFS_NAME;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -19,6 +21,7 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -40,6 +43,7 @@ public class ScheduleActivity extends BaseActivity {
 	public static final String PREFS_NAME = "MyPrefsFile";
 	public static PendingIntent pendingIntent;
 	public static AlarmManager alarmManager;
+	public static String dontnotify = "No";
 
 	private RelativeLayout PickBookLayout;
 	private TextView PickBookTitle;
@@ -75,6 +79,11 @@ public class ScheduleActivity extends BaseActivity {
 		Log.d("database plan return", result.toString());
 
     	Log.v("main activity", String.valueOf(result.size()));
+    	
+    	SharedPreferences alarm = getSharedPreferences(PREFS_NAME, 0);
+        String checkout = alarm.getString("checkout", "No");
+        dontnotify = checkout;
+    	
         if (result.size()>0) {
         	Intent intent = new Intent(this, Tabs.class);
         	startActivity(intent);
@@ -193,20 +202,36 @@ public class ScheduleActivity extends BaseActivity {
 		calendar.set(Calendar.MINUTE,0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
-	
-		alarmManager = (AlarmManager) getApplicationContext().getSystemService(getBaseContext().ALARM_SERVICE);
 		
-		int id = (int) System.currentTimeMillis();
+		
+		SharedPreferences alarm = getSharedPreferences(PREFS_NAME, 0);
+        String setalarm = alarm.getString("alarm", "No");
+        SharedPreferences.Editor editor = alarm.edit();
+		if (setalarm.equals("No")) {
+        
+        
+			alarmManager = (AlarmManager) getApplicationContext().getSystemService(getBaseContext().ALARM_SERVICE);
+		
+			int id = (int) System.currentTimeMillis();
 	
-	 	Intent intent0 = new Intent(this, TimeAlarm.class);	 
+			Intent intent0 = new Intent(this, TimeAlarm.class);	 
 	
-	 	pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), id, intent0, PendingIntent.FLAG_UPDATE_CURRENT);
+			pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), id, intent0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-	 	Log.v("first","notify");
+			Log.v("first","notify2");
 
-	 	alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 24*60*60*1000, pendingIntent);
+        	//alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 24*60*60*1000, pendingIntent);
+			alarmManager.setInexactRepeating(AlarmManager.RTC, 0, 10000, pendingIntent);
 
-    	Intent intent = new Intent(this, Tabs.class);
+			
+			editor.putString("alarm", "Yes ");
+			
+		}
+		dontnotify = "No";
+		editor.putString("checkout", "No");
+		editor.commit();
+        
+        Intent intent = new Intent(this, Tabs.class);
     	startActivity(intent);
     }
     

@@ -17,7 +17,7 @@
 	        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 	    <Button
-	        android:id="@+id/CheckInTodayTask"
+	        android:id="@+id/RestDay"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
         	android:layout_alignParentRight="true"
