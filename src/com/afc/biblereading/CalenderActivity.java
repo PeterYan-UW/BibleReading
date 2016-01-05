@@ -8,12 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.joda.time.DateTime;
+
 import com.afc.biblereading.R;
 import com.afc.biblereading.adapter.CustomCheckboxAdapter;
 import com.afc.biblereading.calender.CaldroidCustomFragment;
 import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.util;
 import com.afc.biblereading.user.CreateSessionActivity;
+import com.afc.biblereading.user.SignInActivity;
 import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.customobjects.QBCustomObjects;
 import com.quickblox.customobjects.model.QBCustomObject;
@@ -24,6 +26,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,6 +45,7 @@ import android.widget.Toast;
 
 @SuppressLint("SimpleDateFormat")
 public class CalenderActivity extends FragmentActivity{
+	public static final String PREFS_NAME = "MyPrefsFile";
 	private boolean undo = false;
 	LocalDataManage DOP;
 	private Date startDay = null;
@@ -52,6 +56,7 @@ public class CalenderActivity extends FragmentActivity{
 	public static Date targetDay;
 	ArrayList<Task> todayTaskList;
 	public static int unfinish = 0;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -343,6 +348,18 @@ public class CalenderActivity extends FragmentActivity{
 		    		builder.create().show();
 	        	}
 	    		break;
+//	        case R.id.RestDay:
+//	        	Intent backMain = new Intent(this, ScheduleActivity.class);
+//	    		LocalDataManage DOP = ((ApplicationSingleton)getApplication()).getDataBase();
+//	    		DOP.DeletePlan(DOP);
+//	    		
+//	    		SharedPreferences alarm = getSharedPreferences(PREFS_NAME, 0);
+//	            SharedPreferences.Editor editor = alarm.edit();
+//            	editor.putString("checkout", "Yes");
+//            	editor.commit();
+//	    		
+//	        	startActivity(backMain);    	
+//	        	break;
         }
 	}
 	

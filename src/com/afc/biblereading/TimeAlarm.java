@@ -12,6 +12,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 
@@ -20,12 +21,13 @@ import android.util.Log;
 // The class has to extend the BroadcastReceiver to get the notification from the system
 
 public class TimeAlarm extends BroadcastReceiver {
+	public static final String PREFS_NAME = "MyPrefsFile";
 	@Override
 	public void onReceive(Context context, Intent paramIntent) {
 		// Request the notification manager
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		// Create a new intent which will be fired if you click on the notification
-		Intent intent = new Intent(context,Tabs.class);
+		Intent intent = new Intent(context,CalenderActivity.class);
 
 		//intent.setData(Uri.parse("http://www.papers.ch"));
 		// Attach the intent to a pending intent
@@ -46,8 +48,9 @@ public class TimeAlarm extends BroadcastReceiver {
 
 		// Fire the notification
 
-		if (CalenderActivity.unfinish!=0) {
-			Log.v("notify0","notify");
+		Log.v("tohere","notify2");
+		if (CalenderActivity.unfinish!=0 && ScheduleActivity.dontnotify.equals("No")) {
+			Log.v("notify0","notify0");
 			notificationManager.notify(1, notification);
 			Log.v("notify","notify");
 		}

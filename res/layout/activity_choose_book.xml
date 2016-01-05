@@ -35,6 +35,7 @@
             android:layout_alignRight="@+id/PickBookTitle"
             android:layout_alignTop="@+id/StartBookText"
             android:layout_marginLeft="14dp"
+            
             android:layout_toRightOf="@+id/StartBookText" />
         
         <TextView
