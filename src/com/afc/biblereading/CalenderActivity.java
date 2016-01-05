@@ -7,35 +7,23 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import junit.framework.Protectable;
-
 import org.joda.time.DateTime;
-import org.joda.time.Days;
-
 import com.afc.biblereading.R;
 import com.afc.biblereading.adapter.CustomCheckboxAdapter;
-import com.afc.biblereading.group.Group;
+import com.afc.biblereading.calender.CaldroidCustomFragment;
 import com.afc.biblereading.helper.DataHolder;
-import com.afc.biblereading.helper.DialogUtils;
 import com.afc.biblereading.helper.util;
 import com.afc.biblereading.user.CreateSessionActivity;
-import com.afc.biblereading.user.UserActivity;
-import com.quickblox.core.QBCallback;
 import com.quickblox.core.QBEntityCallbackImpl;
-import com.quickblox.core.exception.QBResponseException;
-import com.quickblox.core.result.Result;
 import com.quickblox.customobjects.QBCustomObjects;
 import com.quickblox.customobjects.model.QBCustomObject;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,7 +35,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,7 +61,7 @@ public class CalenderActivity extends FragmentActivity{
 		
 		// Setup caldroid fragment
 		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
-		caldroidFragment = new CaldroidFragment();
+		caldroidFragment = new CaldroidCustomFragment();
 		refreshCalender();		
 		// If Activity is created after rotation
 		if (savedInstanceState != null) {
@@ -174,7 +161,6 @@ public class CalenderActivity extends FragmentActivity{
 			    int position, long id) {
 				  	index = position;
 				  	Task task = (Task) parent.getItemAtPosition(position);
-				  	
 				  	Toast.makeText(getApplicationContext(),
 				  			"Clicked on Row: " + task.asString(),
 				  			Toast.LENGTH_LONG).show();
@@ -182,19 +168,19 @@ public class CalenderActivity extends FragmentActivity{
 				  	refreshCalender();
 			  }
 		});
-		
 	}
 
 	@Override
 	protected void onResume(){
 		super.onResume();
 		Log.v("calender activity", "resume");
-		if (DataHolder.getDataHolder().getSignInQbUser()== null){
+		if (DataHolder.getDataHolder().getSignInQbUser() == null && util.isNetworkAvailable(this)){
     		Intent user = new Intent(this, CreateSessionActivity.class);
     		startActivity(user);  			
 		}
 		refreshCalender();
 		SetCheckingButton();
+		setTodayTask();
 	}
 	
 	private void refreshCalender(){
@@ -213,7 +199,6 @@ public class CalenderActivity extends FragmentActivity{
 			}
 		}
 		Log.v(Integer.toString(unfinish),"exist");
-		
 	}
 
 	/**
@@ -282,11 +267,11 @@ public class CalenderActivity extends FragmentActivity{
     
 
 	public void ResetDays(){
-		Intent backMain = new Intent(this, MainActivity.class);
+		Intent backMain = new Intent(this, ScheduleActivity.class);
 		LocalDataManage DOP = ((ApplicationSingleton)getApplication()).getDataBase();
 		DOP.DeletePlan(DOP);
 		
-		MainActivity.alarmManager.cancel(MainActivity.pendingIntent);
+		ScheduleActivity.alarmManager.cancel(ScheduleActivity.pendingIntent);
 		
     	startActivity(backMain);    	
     }
@@ -297,15 +282,6 @@ public class CalenderActivity extends FragmentActivity{
         case R.id.reset:
         	ResetDays();
             return true;
-        case R.id.user:
-        	if (DataHolder.getDataHolder().getSignInQbUser() == null){
-        		Intent user = new Intent(this, CreateSessionActivity.class);
-        		startActivity(user);  
-        	}
-        	else{
-        		Intent user = new Intent(this, UserActivity.class);
-        		startActivity(user);          		
-        	}
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -338,7 +314,7 @@ public class CalenderActivity extends FragmentActivity{
 	public void onClick(View view){
         switch (view.getId()) {
 	        case R.id.CheckInTodayTask:
-	        	if (DataHolder.getDataHolder().getSignInUserGroup() != null){
+	        	if (DataHolder.getDataHolder().getSignInQbUser() != null){
 		        	ArrayList<HashMap<String, Object>> todayTask = DOP.getTodayTask(DOP, 0, startDay);
 		        	ArrayList<Task> converTodayTask = util.DBTasks2Tasks(todayTask);
 		        	String finished = "∂¡ÕÍ";

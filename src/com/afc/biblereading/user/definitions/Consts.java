@@ -6,6 +6,7 @@ public interface Consts {
     String AUTH_KEY = "DbUJbCmXhCTbRWU";
     String AUTH_SECRET = "X3OfQzMLQbVfGb-";
     String POSITION = "position";
+    String GROUP_POSITION = "group_position";
     String EMPTY_STRING = "";
 	String PREFS_NAME = "BibleReadingUser";
 }

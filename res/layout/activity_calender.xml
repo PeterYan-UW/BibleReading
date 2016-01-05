@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 	<RelativeLayout
+	    android:id="@+id/MainPageTitle"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal">
@@ -28,15 +29,18 @@
     
     <ListView 
         android:id="@+id/TodayMission"
+        android:layout_below="@+id/MainPageTitle"
+        android:layout_above="@+id/calendar"
         android:layout_width="match_parent"
-        android:layout_height="200dp" >
+        android:layout_height="wrap_content" >
     </ListView>    
 
     <LinearLayout 
         android:id="@+id/calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
     </LinearLayout>   
 
-</LinearLayout>
+</RelativeLayout>

@@ -15,6 +15,8 @@ import com.afc.biblereading.group.Group;
 import com.quickblox.customobjects.model.QBCustomObject;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.ParseException;
 
 public class util {
@@ -51,30 +53,40 @@ public class util {
 		int beforeToday = Days.daysBetween(startday, new DateTime()).getDays();
 		int afterToday = Days.daysBetween(new DateTime(), enday).getDays()+1;
 		int days = 0;
-		for(; days<beforeToday; days++){
+		while(days < beforeToday){
 			DateTime dt = startday.plusDays(days);
 			Date d = dt.toDate();
 			if (failedDays.contains(days+1)){
 				eventDates.put(d, failColor);				
 			}
-			else {
+			else if(days < afterToday+beforeToday){
 				eventDates.put(d, passColor);				
 			}
+			days++;
 		}
 		days++;
-		for(; days<=afterToday+beforeToday; days++){
+		while(days <= afterToday+beforeToday){
 			DateTime dt = startday.plusDays(days);
 			Date d = dt.toDate();
 			if (failedDays.contains(days+1)){
 				eventDates.put(d, futureColor);				
-			}
+			}		
 			else {
 				eventDates.put(d, passColor);				
 			}
+			days++;
 		}
 		return eventDates;
 	}
 	
+	public static ArrayList<Group> QBGroups2Groups(ArrayList<QBCustomObject> QBGroups){
+		ArrayList<Group> result = new ArrayList<Group>();
+		for (QBCustomObject QBGroup : QBGroups){
+			Group g = QBGroup2Group(QBGroup);
+			result.add(g);
+		}
+		return result;
+	}
 	public static Group QBGroup2Group(QBCustomObject QBGroup){
 		HashMap<String, Object> fields = QBGroup.getFields();
 		String ID = (String) fields.get("id");
@@ -115,5 +127,11 @@ public class util {
     		checkInString += "ֻ"+finish;
     	}
 		return checkInString;
+	}
+	public static boolean isNetworkAvailable(Context context) {
+	    ConnectivityManager connectivityManager 
+	          = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+	    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 }

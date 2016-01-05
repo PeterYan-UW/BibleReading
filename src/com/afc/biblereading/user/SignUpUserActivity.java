@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.afc.biblereading.MainActivity;
+import com.afc.biblereading.ScheduleActivity;
 import com.afc.biblereading.R;
 import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.DialogUtils;
@@ -73,7 +73,7 @@ public class SignUpUserActivity extends BaseActivity {
         }
     }
     protected void startMainAcitvity() {
-		Intent main = new Intent(this, MainActivity.class);
+		Intent main = new Intent(this, ScheduleActivity.class);
 		startActivity(main);
 		finish();		
 	}

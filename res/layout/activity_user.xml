@@ -73,14 +73,6 @@
             android:layout_toRightOf="@+id/self_edit_button"
             android:onClick="onClick"
             android:text="@string/logout" />
-        
-        <Button
-            android:id="@+id/group_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/logout_button"
-            android:onClick="onClick"
-            android:text="Group" />
     </RelativeLayout>
 
 </RelativeLayout>

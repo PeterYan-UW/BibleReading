@@ -3,6 +3,7 @@ package com.afc.biblereading.user;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,10 +11,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afc.biblereading.R;
 import com.afc.biblereading.adapter.UserLogListAdapter;
-import com.afc.biblereading.group.UserGroupActivity;
+import com.afc.biblereading.group.ShowUserGroupActivity;
 import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.DialogUtils;
 import com.quickblox.core.QBEntityCallbackImpl;
@@ -55,7 +57,6 @@ public class UserActivity extends BaseActivity implements AdapterView.OnItemClic
         userLogListView = (ListView) findViewById(R.id.user_log_listview);
         logOutButton = (Button) findViewById(R.id.logout_button);
         selfEditButton = (Button) findViewById(R.id.self_edit_button);
-        groupButton = (Button) findViewById(R.id.group_button);
     }
 
     private void fillAllFields() {
@@ -85,10 +86,11 @@ public class UserActivity extends BaseActivity implements AdapterView.OnItemClic
 
     @Override
     public void onResume() {
-        super.onResume();
-        if (DataHolder.getDataHolder().getSignInQbUser() != null) {
-        	fillAllFields();
-        }
+        super.onResume();    
+		if (DataHolder.getDataHolder().getSignInQbUser()== null){
+    		Intent user = new Intent(this, CreateSessionActivity.class);
+    		startActivity(user);  			
+		}
     }
 
     @Override
@@ -136,10 +138,6 @@ public class UserActivity extends BaseActivity implements AdapterView.OnItemClic
                 intent = new Intent(this, UpdateUserActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.group_button:
-                intent = new Intent(this, UserGroupActivity.class);
-                startActivity(intent);
-            	break;
         }
     }
     
@@ -164,5 +162,29 @@ public class UserActivity extends BaseActivity implements AdapterView.OnItemClic
         Intent intent = new Intent(this, ShowUserActivity.class);
         intent.putExtra(POSITION, position);
         startActivity(intent);
+    }
+
+	private Boolean exit = false;
+	@Override
+    public void onBackPressed() {
+        if (exit) {
+            DataHolder.getDataHolder().setSignInQbUser(null);
+            DataHolder.getDataHolder().setSignInUserGroup(null);
+            DataHolder.getDataHolder().setSignInUserQbGroup(null);
+        	Intent intent = new Intent(Intent.ACTION_MAIN);
+        	intent.addCategory(Intent.CATEGORY_HOME);
+        	intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        	startActivity(intent);
+        } else {
+            Toast.makeText(this, "Press Back again to Exit.",
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
+        }
     }
 }

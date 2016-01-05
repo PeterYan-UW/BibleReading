@@ -19,9 +19,9 @@ public class DataHolder {
     private List<Group> groupList = new ArrayList<Group>();
     private ArrayList<String> userLogList = new ArrayList<String>();
     private ArrayList<Member> Member = new ArrayList<Member>();
-    private QBCustomObject signInUserQBGroup;
+    private ArrayList<QBCustomObject> signInUserQBGroup = new ArrayList<QBCustomObject>();
     private QBUser signInQbUser;
-    private Group signInUserGroup;
+    private ArrayList<Group> signInUserGroup = new ArrayList<Group>();
 
     public static synchronized DataHolder getDataHolder() {
         if (dataHolder == null) {
@@ -94,23 +94,37 @@ public class DataHolder {
         this.signInQbUser = singInQbUser;
     }   
     
-    public Group getSignInUserGroup() {
-        return signInUserGroup;
-    } 
-    
-    public void setSignInUserGroup(Group group) {
-    	Log.v("data holder", "set user group");
-        this.signInUserGroup = group;
+    public int getSignInUserGroupListSize() {
+        return signInUserGroup.size();
     }
-    
-
-    public QBCustomObject getSignInUserQbGroup() {
-		return signInUserQBGroup;
+    public Group getSignInUserGroup(int index) {
+        return signInUserGroup.get(index);
     } 
-    
-    public void setSignInUserQbGroup(QBCustomObject group) {
-    	Log.v("data holder", "set user group");
-        this.signInUserQBGroup = group;
+    public void setSignInUserGroup(ArrayList<Group> groups) {
+    	Log.v("data holder", "set user groups");
+    	if (groups != null){
+    		this.signInUserGroup = new ArrayList<Group>();
+            this.signInUserGroup.addAll(groups);    		
+    	}
+    }
+    public void addSignInUserGroup(Group group) {
+    	Log.v("data holder", "add user group");
+        this.signInUserGroup.add(group);
+    }    
+
+    public QBCustomObject getSignInUserQbGroup(int index) {
+		return signInUserQBGroup.get(index);
+    } 
+    public void setSignInUserQbGroup(ArrayList<QBCustomObject> groups) {
+    	Log.v("data holder", "set user groups");
+    	if (groups != null){
+    		this.signInUserQBGroup = new ArrayList<QBCustomObject>();
+    		this.signInUserQBGroup.addAll(groups);
+    	}
+    }
+    public void addSignInUserQbGroup(QBCustomObject group) {
+    	Log.v("data holder", "add user group");
+        this.signInUserQBGroup.add(group);
     }
 
     public String getSignInUserOldPassword() {

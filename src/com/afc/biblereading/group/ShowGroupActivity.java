@@ -5,27 +5,54 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.afc.biblereading.R;
+import com.afc.biblereading.Tabs;
+import com.afc.biblereading.adapter.UserListAdapter;
 import com.afc.biblereading.helper.DataHolder;
 import com.afc.biblereading.helper.DialogUtils;
 import com.afc.biblereading.helper.util;
 import com.afc.biblereading.user.BaseActivity;
 import com.quickblox.core.QBEntityCallbackImpl;
+import com.quickblox.core.request.QBPagedRequestBuilder;
 import com.quickblox.customobjects.QBCustomObjects;
 import com.quickblox.customobjects.model.QBCustomObject;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
 import static com.afc.biblereading.user.definitions.Consts.POSITION;
 
 public class ShowGroupActivity extends BaseActivity {
 
+    private TextView groupNameTextView;
+    private TextView groupNumTextView;
+    private ListView groupMemberListView;
+    private int position;
+    
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_group);
+		initialUI();
+	    Bundle extras = getIntent().getExtras();
+	    if(extras == null) {
+	    	position= -1;
+	    } else {
+	    	position= extras.getInt(POSITION);
+	    }
+	    Group group = DataHolder.getDataHolder().getGroup(position);
+	    applyGroupInfo(group);
+	}
+
+	private void initialUI() {
+        groupNameTextView = (TextView) findViewById(R.id.full_name_textview);	
+        groupNumTextView = (TextView) findViewById(R.id.group_number_textview);
+        groupMemberListView = (ListView) findViewById(R.id.member_listview);
 	}
 
 	@Override
@@ -56,13 +83,6 @@ public class ShowGroupActivity extends BaseActivity {
     }
 
 	private void joinGroup() {
-		int position;
-	    Bundle extras = getIntent().getExtras();
-	    if(extras == null) {
-	    	position= -1;
-	    } else {
-	    	position= extras.getInt(POSITION);
-	    }
 	    QBCustomObject oldQBGroup = DataHolder.getDataHolder().getQBGroup(position);
 	    ArrayList<Integer> members = DataHolder.getDataHolder().getGroup(position).getMembersId();
 	    members.add(DataHolder.getDataHolder().getSignInUserId());
@@ -77,8 +97,8 @@ public class ShowGroupActivity extends BaseActivity {
 	        @Override
 	        public void onSuccess(QBCustomObject newQBGroup, Bundle params) {
 	        	Group group = util.QBGroup2Group(newQBGroup);
-	        	DataHolder.getDataHolder().setSignInUserGroup(group);	
-	        	DataHolder.getDataHolder().setSignInUserQbGroup(newQBGroup);	 
+	        	DataHolder.getDataHolder().addSignInUserGroup(group);	
+	        	DataHolder.getDataHolder().addSignInUserQbGroup(newQBGroup);	 
 	        	backToUserGroupsActivity();
 	        }
 	     
@@ -88,7 +108,30 @@ public class ShowGroupActivity extends BaseActivity {
 	        }
 	    });		
 	}
+	
+    private void applyGroupInfo(Group group) {
+    	QBPagedRequestBuilder pagedRequestBuilder = new QBPagedRequestBuilder();
+	    groupNameTextView.setText(group.getName());
+    	groupNumTextView.setText(String.valueOf(group.getGroupSize()));
+    	ArrayList<Integer> usersIds = group.getMembersId();
+    	 
+    	QBUsers.getUsersByIDs(usersIds, pagedRequestBuilder, new QBEntityCallbackImpl<ArrayList<QBUser>>() {
+    		@Override
+            public void onSuccess(final ArrayList<QBUser> qbUsers, Bundle bundle) {
+    	    	UserListAdapter memberAdapter = new UserListAdapter(context, R.layout.list_item_user, qbUsers);
+    	    	groupMemberListView.setAdapter(memberAdapter); 
+    	    }
+    	 
+    	    @Override
+    	    public void onError(List<String> errors) {
+    	 
+    	    }
+    	});
+    }
+    
 	private void backToUserGroupsActivity() {
+		Intent userGroup = new Intent(this, Tabs.class);
+		startActivity(userGroup);
 		finish();
 	}	
 }

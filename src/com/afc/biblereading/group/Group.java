@@ -3,10 +3,13 @@ package com.afc.biblereading.group;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.quickblox.users.model.QBUser;
+
 public class Group {
 	private String ID;
 	private String name = null;
 	private ArrayList<Integer> membersId = null;
+	private ArrayList<QBUser> membersQB = null;
 	private HashMap<Integer, Member> members = null;
 	private int finishRate = 0;
 	
@@ -64,5 +67,11 @@ public class Group {
 	}
 	public Member getMembersByID(int id){
 		return this.members.get(id);
+	}
+	public void setMembersQB(ArrayList<QBUser> members) {
+		this.membersQB = members;
+	}
+	public ArrayList<QBUser> getMembersQB() {
+		return this.membersQB;
 	}
 }
