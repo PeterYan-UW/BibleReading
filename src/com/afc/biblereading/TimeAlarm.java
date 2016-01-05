@@ -27,7 +27,7 @@ public class TimeAlarm extends BroadcastReceiver {
 		// Request the notification manager
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		// Create a new intent which will be fired if you click on the notification
-		Intent intent = new Intent(context,Tabs.class);
+		Intent intent = new Intent(context,CalenderActivity.class);
 
 		//intent.setData(Uri.parse("http://www.papers.ch"));
 		// Attach the intent to a pending intent
@@ -48,7 +48,7 @@ public class TimeAlarm extends BroadcastReceiver {
 
 		// Fire the notification
 
-        
+		Log.v("tohere","notify2");
 		if (CalenderActivity.unfinish!=0 && ScheduleActivity.dontnotify.equals("No")) {
 			Log.v("notify0","notify0");
 			notificationManager.notify(1, notification);

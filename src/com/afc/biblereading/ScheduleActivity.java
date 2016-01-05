@@ -198,9 +198,9 @@ public class ScheduleActivity extends BaseActivity {
 
         Calendar calendar = Calendar.getInstance();
     
-		calendar.set(Calendar.HOUR_OF_DAY, 8);
-		calendar.set(Calendar.MINUTE,0);
-		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 7);
+		calendar.set(Calendar.MINUTE,59);
+		calendar.set(Calendar.SECOND, 59);
 		calendar.set(Calendar.MILLISECOND, 0);
 		
 		
@@ -220,8 +220,8 @@ public class ScheduleActivity extends BaseActivity {
 
 			Log.v("first","notify2");
 
-        	//alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 24*60*60*1000, pendingIntent);
-			alarmManager.setInexactRepeating(AlarmManager.RTC, 0, 10000, pendingIntent);
+        	alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 24*60*60*1000, pendingIntent);
+			//alarmManager.setInexactRepeating(AlarmManager.RTC, 0, 10000, pendingIntent);
 
 			
 			editor.putString("alarm", "Yes ");

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -39,6 +40,8 @@ public class SignInActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
         setContentView(R.layout.activity_sign_in);
+        int sdkVersion = android.os.Build.VERSION.SDK_INT;
+        Log.v( Integer.toString(sdkVersion),"version");
         initUI();
     }
 

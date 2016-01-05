@@ -11,22 +11,28 @@
         android:id="@+id/pick_book_layout"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-       	android:layout_centerHorizontal="true">
+       	android:layout_centerHorizontal="true"
+       	>
     	<TextView
             android:id="@+id/PickBookTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-       		android:layout_centerHorizontal="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="42dp"
+       		
+            android:layout_marginLeft="57dp"
+            android:layout_marginTop="13dp"
             android:text="选择阅读范围"
-            android:textSize="40dp" />
+            android:textSize="25dp" />
+    	<View android:id="@+id/separator" 
+ 			android:background="#5882FA" 
+			android:layout_width = "fill_parent"
+ 			android:layout_height="3dip"
+			android:layout_marginTop="49dp"/>
 		<TextView
             android:id="@+id/StartBookText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginLeft="75dp"
+            android:layout_marginTop="100dp"
             android:layout_below="@+id/PickBookTitle"
             android:text="从"
             android:textSize="30dp"
@@ -34,11 +40,9 @@
 
         <Spinner
             android:id="@+id/start_spinner"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/StartBookText"
-            android:layout_alignRight="@+id/PickBookTitle"
-            android:layout_alignTop="@+id/StartBookText"
             android:layout_marginLeft="14dp"
             android:layout_toRightOf="@+id/StartBookText" />
         
@@ -47,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/StartBookText"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="75dp"
             android:text="到"
             android:layout_marginTop="50dp"
             android:textSize="30dp"
@@ -55,23 +59,32 @@
 
         <Spinner
             android:id="@+id/end_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_alignBottom="@+id/EndBookText"
-            android:layout_alignRight="@+id/PickBookTitle"
+            android:layout_height="wrap_content"
+            android:layout_width="120dp" 
             android:layout_alignTop="@+id/EndBookText"
             android:layout_marginLeft="14dp"
-            android:layout_toRightOf="@+id/EndBookText" />
+            android:layout_toRightOf="@+id/EndBookText"/>
         
         <Button
 	        android:id="@+id/next_step"
-	        android:layout_width="wrap_content"
+	        android:layout_width="100dp"
 	        android:layout_height="wrap_content"
-	        android:layout_centerHorizontal="true"
-	        android:layout_below="@+id/end_spinner"
-            android:layout_marginTop="50dp"
-	        android:text="下一步"
-	        android:onClick="nextStept" />
+			android:layout_marginLeft="200dp"
+            android:layout_marginTop="500dp"
+	        android:text="下 一 步"
+	        android:onClick="nextStept"
+	        android:background="@drawable/next_button"
+	        android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            
+            android:layout_marginTop="1dp"
+            
+            android:src="@drawable/holybible" />
+
 	</RelativeLayout>
     <RelativeLayout
         android:id="@+id/pick_date_layout"
@@ -79,63 +92,80 @@
         android:layout_width="match_parent"
         android:layout_centerHorizontal="true"
        	android:visibility="gone">
+        
     	<TextView
             android:id="@+id/PickDateTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="42dp"
-            android:text="选择阅读周期"
-            android:textSize="40dp"
-        	android:layout_centerHorizontal="true" />
+			android:layout_marginLeft="57dp"
+            android:layout_marginTop="13dp"
+            android:textSize="25dp"
+            android:text="选择阅读周期"/>
+    	<View android:id="@+id/separator2" 
+ 			android:background="#5882FA" 
+			android:layout_width = "fill_parent"
+ 			android:layout_height="3dip"
+			android:layout_marginTop="49dp"/>
 		<TextView
             android:id="@+id/StartDateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:layout_below="@+id/PickDateTitle"
             android:text="开始日期"
-            android:textSize="30dp"
+            android:textSize="20sp"
             android:textAppearance="?android:attr/textAppearanceLarge" />
         <DatePicker
         	android:id="@+id/StartDateValue"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
             android:layout_below="@+id/StartDateText"
-        	android:layout_centerHorizontal="true" />
+            android:layout_marginTop="-30dp"
+        	android:layout_centerHorizontal="true"
+        	android:calendarViewShown="false" />
         
         <TextView
             android:id="@+id/EndDateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/StartDateValue"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="1dp"
             android:text="结束日期"
-            android:textSize="30dp"
+            android:textSize="20sp"
             android:textAppearance="?android:attr/textAppearanceLarge" />
         <DatePicker
         	android:id="@+id/EndDateValue"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
             android:layout_below="@+id/EndDateText"
-        	android:layout_centerHorizontal="true"/>
+            android:layout_marginTop="-30dp"
+        	android:layout_centerHorizontal="true"
+        	android:calendarViewShown="false"/>
         <Button
 	        android:id="@+id/back"
-	        android:layout_width="wrap_content"
+	        android:layout_width="100dp"
 	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/EndDateValue"
-	        android:layout_marginTop="20dp"
-	        android:layout_alignParentLeft="true"
-	        android:text="上一步"
-	        android:onClick="stepBack" />
+	        android:layout_marginLeft="35dp"
+            android:layout_marginTop="500dp"
+	        android:text="上 一 步"
+	        android:onClick="stepBack"
+	        android:background="@drawable/next_button"/>
         <Button
 	        android:id="@+id/start"
-	        android:layout_width="wrap_content"
+	        android:layout_width="100dp"
 	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/EndDateValue"
-	        android:layout_marginTop="20dp"
-	        android:layout_alignParentRight="true"
-	        android:text="开始"
-	        android:onClick="startReading" />
+	        android:layout_marginLeft="200dp"
+            android:layout_marginTop="500dp"
+	        android:text="开 始"
+	        android:onClick="startReading"
+	        android:background="@drawable/next_button"/>
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            
+            android:layout_marginTop="1dp"
+            
+            android:src="@drawable/time" />
 	</RelativeLayout>
 </RelativeLayout>

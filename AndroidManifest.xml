@@ -13,10 +13,10 @@
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+        android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" android:requiredForAllUsers="false" android:largeHeap="false" android:hasCode="true">
         <activity
             android:name=".ScheduleActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" android:theme="@android:style/Theme.Holo.Light.NoActionBar">
         </activity>
         <activity
             android:name=".CalenderActivity"
@@ -47,7 +47,7 @@
             android:name=".user.SignInActivity"
             android:label="@string/sign_in"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".user.ShowUserActivity"
             android:label="@string/show_user"
@@ -86,7 +86,7 @@
         </activity>
         <activity
             android:name=".ChooseBookActivity"
-            android:label="@string/title_activity_choose_book" >
+            android:label="@string/title_activity_choose_book" android:theme="@android:style/Theme.Holo.Light">
         </activity>
         <activity
             android:name=".group.UserGroupListActivity"

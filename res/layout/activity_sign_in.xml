@@ -10,7 +10,7 @@
         android:id="@+id/password_edittext"
         android:layout_width="240dp"
         android:layout_height="80dp"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="210dp"
         android:layout_marginLeft="70dp"
 
         android:capitalize="none"
@@ -26,7 +26,7 @@
         android:layout_width="300dp"
         android:layout_height="40dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="365dp"
+        android:layout_marginTop="325dp"
         android:onClick="onClick"
         android:text="登        陆"
         android:textSize="20dp" 
@@ -36,7 +36,7 @@
         android:id="@+id/stay_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-		android:layout_marginTop="310dp"
+		android:layout_marginTop="270dp"
         android:layout_centerHorizontal="false"
         android:text="保持登陆" />
 
@@ -46,14 +46,14 @@
         android:layout_height="100dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="18dp"
         android:src="@drawable/logo_circle" />
 
     <EditText
         android:id="@+id/email_edittext"
         android:layout_width="240dp"
         android:layout_height="80dp"
-        android:layout_marginTop="178dp"
+        android:layout_marginTop="138dp"
         android:layout_marginLeft="70dp"
         android:background="#00000000"
         android:ems="10"
@@ -70,7 +70,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:background="#BEBEBE"
         android:alpha="0.4" 
-        android:layout_marginTop="190dp"
+        android:layout_marginTop="150dp"
         android:layout_centerHorizontal="true" />
     
     <TextView
@@ -80,14 +80,14 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:background="#BEBEBE"
         android:alpha="0.5" 
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="220dp"
         android:layout_centerHorizontal="true" />
 
     <ImageView
         android:id="@+id/user_icon"
         android:layout_width="25dp"
         android:layout_height="25dp"
-		android:layout_marginTop="204dp"
+		android:layout_marginTop="164dp"
         android:layout_marginLeft="28dp"
         android:src="@drawable/user_icon"
         android:alpha="0.6" />
@@ -96,7 +96,7 @@
         android:id="@+id/password_icon"
         android:layout_width="25dp"
         android:layout_height="25dp"
-		android:layout_marginTop="272dp"
+		android:layout_marginTop="232dp"
         android:layout_marginLeft="28dp"
         android:src="@drawable/password_icon"
         android:alpha="0.7" />
@@ -107,7 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/password_edittext"
 
-        android:layout_marginTop="320dp"
+        android:layout_marginTop="280dp"
         android:layout_marginRight="10dp"
         android:text="新用户"
         android:textAppearance="?android:attr/textAppearanceSmall" 
